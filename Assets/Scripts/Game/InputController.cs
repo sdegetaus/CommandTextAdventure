@@ -4,10 +4,44 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Experiment : MonoBehaviour {
+/// <summary>
+/// InputController controls the keys pressed during runtime and reads the text value from the console GUI.
+/// </summary>
+public class InputController : MonoBehaviour {
+
+    static public InputController instance;
 
     [SerializeField] private InputField inputField;
+    [SerializeField] private List<string> memoList;
 
+    private readonly int memoLimit = 5;
+    private int memoPointer;
+
+    private void Awake() {
+        instance = this;
+    }
+
+    private void Start() {
+        inputField.ActivateInputField();
+        memoPointer = memoList.Count;
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            InputParser(inputField.text);
+            ClearInput();
+            inputField.ActivateInputField(); // Re-select input field
+            memoPointer = memoList.Count; // Restart Memo Navigation
+        }
+        if (Input.GetKeyDown(KeyCode.UpArrow)) {
+            NavigateMemo(KeyCode.UpArrow);
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow)) {
+            NavigateMemo(KeyCode.DownArrow);
+        }
+    }
+
+    #region Input Readers
     private void InputParser(string _input) { 
         if (_input == "" || _input == " ") {
             Debug.Log("Nothing");
@@ -27,8 +61,12 @@ public class Experiment : MonoBehaviour {
             string[] inputWithoutSpaces = tempList.ToArray();
             InputLengthChecker(inputWithoutSpaces);
             tempList.Clear();
+
+            // Removing Data if Memo has reached its limit
+            if (memoList.Count >= memoLimit) { memoList.RemoveAt(0); }
+            // Saving Data to Memoization
+            memoList.Add(string.Join(" ", inputWithoutSpaces));
         }
-        inputField.text = "";
     }
 
     private void InputLengthChecker(string[] _inputSplit) {
@@ -77,10 +115,29 @@ public class Experiment : MonoBehaviour {
         //Console.instance.Invoke("MyFunction", 0.0f);
     }
 
-    //private void LookUpCommand(string _action, string _object = "", string _noun = "", string _var = "") { }
-
-    // Temporal Attachement to Button
-    public void Submit() {
-        InputParser(inputField.text);
+    private void ClearInput() {
+        inputField.text = "";
     }
+
+    #endregion
+
+    #region Input Memoization
+
+    private void NavigateMemo(KeyCode keyCode) {
+        // If the list count is 0, we assume it is empty
+        if(memoList.Count == 0) { return; }
+        ClearInput();
+        // Up: pointer - 1 | Down: pointer + 1
+        if (keyCode == KeyCode.UpArrow) { memoPointer--; } else { memoPointer++; }
+        // If pointer is less than zero, start at end
+        if (memoPointer < 0) { memoPointer = memoList.Count - 1; }
+        // If pointer is more than length, start at the beginning
+        if (memoPointer >= memoList.Count) { memoPointer = 0; }
+        // Set input to the older value
+        inputField.text = memoList[memoPointer];
+    }
+
+    #endregion
+
+    //private void LookUpCommand(string _action, string _object = "", string _noun = "", string _var = "") { }
 }
