@@ -6,7 +6,9 @@ public class ConsoleResponseHandling : MonoBehaviour {
 
     public enum ErrorType {
         ValueNotFormattedCorrectly,
-        InvalidCommand
+        InvalidCommand,
+        LocalVariableNotFound,
+        OnlyOneDigitVariablesAllowed
     }
 
     public enum ResponseType {
@@ -27,6 +29,12 @@ public class ConsoleResponseHandling : MonoBehaviour {
                 break;
             case ErrorType.InvalidCommand:
                 errorMessage += "invalid command";
+                break;
+            case ErrorType.LocalVariableNotFound:
+                errorMessage += "local variable not found";
+                break;
+            case ErrorType.OnlyOneDigitVariablesAllowed:
+                errorMessage += "only one digit variables allowed";
                 break;
             default:
                 errorMessage += "nothing";
