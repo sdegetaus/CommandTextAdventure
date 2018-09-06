@@ -66,7 +66,7 @@ public class GlobalInputParser {
         }
     }
 
-    // WIP
+    // WIP - Doesn't work atm
     static public bool IsArithmeticOperation(string[] s) {
         int count = 0;
         for (int i = 0; i < s.Length; i++) {

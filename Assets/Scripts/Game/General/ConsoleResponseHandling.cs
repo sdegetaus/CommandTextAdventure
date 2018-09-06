@@ -8,11 +8,13 @@ public class ConsoleResponseHandling : MonoBehaviour {
         ValueNotFormattedCorrectly,
         InvalidCommand,
         LocalVariableNotFound,
-        OnlyOneDigitVariablesAllowed
+        OnlyOneDigitVariablesAllowed,
+        VariablesCanOnlyBeLetters
     }
 
     public enum ResponseType {
-        Done
+        Done,
+        ThereAreNoVariablesSet
     }
 
     static public ConsoleResponseHandling instance;
@@ -31,10 +33,13 @@ public class ConsoleResponseHandling : MonoBehaviour {
                 errorMessage += "invalid command";
                 break;
             case ErrorType.LocalVariableNotFound:
-                errorMessage += "local variable not found";
+                errorMessage += "local variable " + blamedValue + " not found";
                 break;
             case ErrorType.OnlyOneDigitVariablesAllowed:
                 errorMessage += "only one digit variables allowed";
+                break;
+            case ErrorType.VariablesCanOnlyBeLetters:
+                errorMessage += "variables can only be letters.";
                 break;
             default:
                 errorMessage += "nothing";
@@ -48,6 +53,9 @@ public class ConsoleResponseHandling : MonoBehaviour {
         switch (responseType) {
             case ResponseType.Done:
                 responseMessage += "Done";
+                break;
+            case ResponseType.ThereAreNoVariablesSet:
+                responseMessage += "Currently there are no variables set";
                 break;
         }
         CanvasLogicInGame.instance.SetOutput(responseMessage);

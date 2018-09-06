@@ -29,7 +29,7 @@ public class CanvasLogicInGame : MonoBehaviour {
         console_OutputText.text = "";
     }
 
-    public void ChangeUIColor(Color color, bool background) {
+    public void SetUIColors(Color color, bool background) {
         if (background) {
             console_BG.color = color;
         } else {
@@ -37,6 +37,14 @@ public class CanvasLogicInGame : MonoBehaviour {
             console_InputTextPlaceholder.color = color;
             console_OutputText.color = color;
         }
+    }
+
+    public void InvertUIColors() {
+        console_BG.color = new Color(Mathf.Abs(console_BG.color.r - 1), Mathf.Abs(console_BG.color.g - 1), Mathf.Abs(console_BG.color.b - 1));
+        Color textInverted = new Color(Mathf.Abs(console_InputText.color.r - 1), Mathf.Abs(console_InputText.color.g - 1), Mathf.Abs(console_InputText.color.b - 1));
+        console_InputText.color = textInverted;
+        console_InputTextPlaceholder.color = textInverted;
+        console_OutputText.color = textInverted;
     }
 
 }
