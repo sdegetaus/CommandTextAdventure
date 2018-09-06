@@ -6,7 +6,11 @@ using System;
 /// GlobalInputParser is a regular C# class that contains a set of methods which help with common string to "object" parsing. For example, hexadecimal value to a color.
 /// </summary>
 public class GlobalInputParser {
-
+    /// <summary>
+    /// Takes a string with a Hexadecimal value in it, and converts it into a usable Unity Color Struct.
+    /// </summary>
+    /// <param name="hexValue">Hexadecimal string, with or without a leading #</param>
+    /// <returns>Unity Color</returns>
     static public Color StringToColor(string hexValue) {
         // Removing '#' char at beginning
         if (hexValue.StartsWith("#")) { hexValue = hexValue.Substring(1); }
@@ -18,7 +22,7 @@ public class GlobalInputParser {
             case 6: // Do nothing
                 break;
             default:
-                Debug.LogError("Hex Value Not Formatted Correctly!"); // ToDo
+                ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.ValueNotFormattedCorrectly);
                 return new Color(0, 0, 0);
         }
         // Separate HexValue string into 2's (ff ff ff)
@@ -26,14 +30,17 @@ public class GlobalInputParser {
         for (int i = 0; i < hexValue.Length; i+=2) {
             separatedHexValues.Add(hexValue.Substring(i, Mathf.Min(2, hexValue.Length - i)));
         }
-        // Converting each pair of letters to Hexadecimal
-        int[] stringValuesToHex = new int[3];
-        for (int i = 0; i < 3; i++) {
-            stringValuesToHex[i] = Int32.Parse(separatedHexValues[i].ToString(), System.Globalization.NumberStyles.HexNumber);
-            Debug.Log(stringValuesToHex[i]);
+        try {
+            // Converting each pair of letters to Hexadecimal
+            int[] stringValuesToHex = new int[3];
+            for (int i = 0; i < 3; i++) {
+                stringValuesToHex[i] = Int32.Parse(separatedHexValues[i].ToString(), System.Globalization.NumberStyles.HexNumber);
+            }
+            // Returning values as individual floats to fit Color's attributes (255/255 = 1)
+            return new Color(stringValuesToHex[0] / 255.0f, stringValuesToHex[1] / 255.0f, stringValuesToHex[2] / 255.0f);
+        } catch {
+            ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.ValueNotFormattedCorrectly);
+            return new Color(0, 0, 0);
         }
-        // Returning values as individual floats to fit Color's attributes (255/255 = 1)
-        return new Color(stringValuesToHex[0] / 255.0f, stringValuesToHex[1] / 255.0f, stringValuesToHex[2] / 255.0f);
     }
-
 }

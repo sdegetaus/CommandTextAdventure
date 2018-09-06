@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Reflection;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -6,14 +8,13 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// InputController controls the keys pressed during runtime and reads the text value from the console GUI.
+/// InputController controls the keys pressed during runtime and reads the text value from the console GUI; It also keeps the input memoization.
 /// </summary>
 public class InputController : MonoBehaviour {
 
     static public InputController instance;
 
     [SerializeField] private TMP_InputField inputField;
-    [SerializeField] private TMP_Text outputText;
     [SerializeField] private List<string> memoList;
 
     private readonly int memoLimit = 5;
@@ -32,14 +33,16 @@ public class InputController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Return)) {
             InputParser(inputField.text);
             ClearInput();
-            inputField.ActivateInputField(); // Re-select input field
+            inputField.ActivateInputField();
             memoPointer = memoList.Count; // Restart Memo Navigation
         }
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             NavigateMemo(KeyCode.UpArrow);
+            inputField.ActivateInputField();
         }
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
             NavigateMemo(KeyCode.DownArrow);
+            inputField.ActivateInputField();
         }
     }
 
@@ -73,6 +76,7 @@ public class InputController : MonoBehaviour {
 
     private void InputLengthChecker(string[] _inputSplit) {
         int _inputSplitLength = _inputSplit.Length;
+        CanvasLogicInGame.instance.SetOutput(string.Join(" ", _inputSplit));
         switch (_inputSplitLength) {
             case 1:
                 // Action
@@ -95,7 +99,7 @@ public class InputController : MonoBehaviour {
                 CallCommand(_action: _inputSplit[1], _object: _inputSplit[0], _noun: _inputSplit[2], _var: _inputSplit[3]);
                 break;
             default:
-                Debug.LogError("Default Case: Invalid Command");
+                ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.InvalidCommand);
                 break;
         }
     }
@@ -103,27 +107,42 @@ public class InputController : MonoBehaviour {
     private void CallCommand(string _action, string _object = null, string _noun = null, string _var = null) {
         Debug.Log(_object + " | " + _action + " | " + _noun + " | " + _var);
 
-        // Around here: .ToLower()
+        string[] NounAndVar = { _noun, _var };
 
-        // Defensive Checker
-        if (_action == null) {
-            Debug.LogError("Missing Action: Invalid Command");
+        try {
+            if (_object == null) {
+                InvokeStringMethod(_action, "Console", NounAndVar);
+            } else {
+                InvokeStringMethod(_action, _object, NounAndVar);
+            }
+        } catch {
+            ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.InvalidCommand);
             return;
         }
-
-        if (_object == null) {
-            Debug.Log("_object = null"); // Go To Action
-        }
-
-        // This does the trick :)
-        //Console.instance.Invoke("MyFunction", 0.0f);
-    }
-
-    private void ClearInput() {
-        inputField.text = ""; // Maybe this method is superfluos...
     }
 
     #endregion
+
+    //private void LookUpObject(_Cn.Object obj) {
+    //    switch (obj) {
+    //        case _Cn.Object.Console:
+    //            break;
+    //    }
+    //}
+
+    /// <summary>
+    /// Invokes a Class Method with parameters. This where the magic happens :) 
+    /// </summary>
+    /// <param name="methodName">Method to Call</param>
+    /// <param name="className">Method's Class Name</param>
+    /// <param name="stringParams">Method's parameters</param>
+    /// <returns>Null</returns>
+    public string InvokeStringMethod(string methodName, string className = null, string[] stringParams = null) {
+        Type calledType = Type.GetType(className);
+        String s = (String)calledType.InvokeMember(methodName, BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static, null, null,
+                    new System.Object[] { stringParams });
+        return s;
+    }
 
     #region Input Memoization
 
@@ -142,5 +161,9 @@ public class InputController : MonoBehaviour {
     }
 
     #endregion
+
+    private void ClearInput() {
+        inputField.text = ""; // Maybe this method is superfluos...
+    }
 
 }

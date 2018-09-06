@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class OutputController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    static public OutputController instance;
+
+    private void Awake() {
+        instance = this;
+    }
+
 }

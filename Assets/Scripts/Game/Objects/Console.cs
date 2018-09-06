@@ -6,27 +6,34 @@ public class Console : MonoBehaviour {
 
     static public Console instance;
 
-    //private string action;
-    //private string noun;
-    //private string var;
-
     private void Awake() {
         instance = this;
     }
 
-    //public Console(string _action, string _noun = "", string _var = "") {
-    //    action = _action;
-    //    noun = _noun;
-    //    var = _var;
-    //}
-
-    public void MyFunction()
-    {
-        Debug.Log("WOW!");
+    // Console Actions
+    static public void Clear(string[] nounAndVar = null) {
+        CanvasLogicInGame.instance.ClearOutput();
     }
 
-    //public void Change(string _noun, string _var = "") {
+    static public void Change(string[] nounAndVar) {
 
-    //}
+        string _noun = nounAndVar[0];
+        string _var = nounAndVar[1];
 
+        switch(_noun) {
+            case "bg":
+                CanvasLogicInGame.instance.ChangeUIColor(GlobalInputParser.StringToColor(_var), true);
+                break;
+            case "text":
+                CanvasLogicInGame.instance.ChangeUIColor(GlobalInputParser.StringToColor(_var), false);
+                break;
+            default:
+                ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.InvalidCommand);
+                return;
+        }
+    }
+
+    static public void About(string[] nounAndVar = null) {
+
+    }
 }
