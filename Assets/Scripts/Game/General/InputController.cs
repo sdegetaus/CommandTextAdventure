@@ -25,6 +25,7 @@ public class InputController : MonoBehaviour {
     }
 
     private void Start() {
+        inputField.text = "";
         inputField.ActivateInputField();
         memoPointer = memoList.Count;
     }
@@ -47,7 +48,7 @@ public class InputController : MonoBehaviour {
     }
 
     #region Input Readers
-    private void InputParser(string _input) { 
+    private void InputParser(string _input) {
         if (_input == "" || _input == " ") {
             Debug.Log("Nothing");
         } else {
@@ -99,13 +100,17 @@ public class InputController : MonoBehaviour {
                 CallCommand(_action: _inputSplit[1], _object: _inputSplit[0], _noun: _inputSplit[2], _var: _inputSplit[3]);
                 break;
             default:
-                ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.InvalidCommand);
+                ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
                 break;
         }
     }
 
     private void CallCommand(string _action, string _object = null, string _noun = null, string _var = null) {
-        Debug.Log(_object + " | " + _action + " | " + _noun + " | " + _var);
+
+        // Setting first char of every string to upper (except _var)
+        _action = GlobalInputParser.SetFirstCharToUpper(_action);
+        _object = GlobalInputParser.SetFirstCharToUpper(_object);
+        _noun = GlobalInputParser.SetFirstCharToUpper(_noun);
 
         string[] NounAndVar = { _noun, _var };
 
@@ -116,19 +121,14 @@ public class InputController : MonoBehaviour {
                 InvokeStringMethod(_action, _object, NounAndVar);
             }
         } catch {
-            ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.InvalidCommand);
+            ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
             return;
         }
+        ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);
+        //Debug.Log(_object + " | " + _action + " | " + _noun + " | " + _var);
     }
 
     #endregion
-
-    //private void LookUpObject(_Cn.Object obj) {
-    //    switch (obj) {
-    //        case _Cn.Object.Console:
-    //            break;
-    //    }
-    //}
 
     /// <summary>
     /// Invokes a Class Method with parameters. This where the magic happens :) 

@@ -11,6 +11,11 @@ public class Console : MonoBehaviour {
     }
 
     // Console Actions
+    static public void About(string[] nounAndVar = null) {
+        // To move into another file
+        CanvasLogicInGame.instance.SetOutput("Command Text Adventure is a singled-person developed game by Santiago Degetau. \n" + "Version: " + Application.version);
+    }
+
     static public void Clear(string[] nounAndVar = null) {
         CanvasLogicInGame.instance.ClearOutput();
     }
@@ -21,19 +26,16 @@ public class Console : MonoBehaviour {
         string _var = nounAndVar[1];
 
         switch(_noun) {
-            case "bg":
+            case "Bg":
                 CanvasLogicInGame.instance.ChangeUIColor(GlobalInputParser.StringToColor(_var), true);
                 break;
-            case "text":
+            case "Text":
                 CanvasLogicInGame.instance.ChangeUIColor(GlobalInputParser.StringToColor(_var), false);
                 break;
             default:
-                ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.InvalidCommand);
+                ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
                 return;
         }
     }
 
-    static public void About(string[] nounAndVar = null) {
-
-    }
 }

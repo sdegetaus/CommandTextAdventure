@@ -6,6 +6,7 @@ using System;
 /// GlobalInputParser is a regular C# class that contains a set of methods which help with common string to "object" parsing. For example, hexadecimal value to a color.
 /// </summary>
 public class GlobalInputParser {
+
     /// <summary>
     /// Takes a string with a Hexadecimal value in it, and converts it into a usable Unity Color Struct.
     /// </summary>
@@ -22,7 +23,7 @@ public class GlobalInputParser {
             case 6: // Do nothing
                 break;
             default:
-                ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.ValueNotFormattedCorrectly);
+                ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.ValueNotFormattedCorrectly);
                 return new Color(0, 0, 0);
         }
         // Separate HexValue string into 2's (ff ff ff)
@@ -39,8 +40,28 @@ public class GlobalInputParser {
             // Returning values as individual floats to fit Color's attributes (255/255 = 1)
             return new Color(stringValuesToHex[0] / 255.0f, stringValuesToHex[1] / 255.0f, stringValuesToHex[2] / 255.0f);
         } catch {
-            ErrorHandling.instance.ThrowError(ErrorHandling.ErrorType.ValueNotFormattedCorrectly);
+            ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.ValueNotFormattedCorrectly);
             return new Color(0, 0, 0);
+        }
+    }
+
+    /// <summary>
+    /// Checks if the provided string starts with and Uppercase letter, and returns it capitalized if not
+    /// </summary>
+    /// <param name="s">String to check</param>
+    /// <returns>Capitalized version of string</returns>
+    static public string SetFirstCharToUpper(string s) {
+        // Check is string passed is null
+        if (s == null) {
+            return s;
+        }
+        // Check if it is uppercased
+        if (char.IsUpper(s[0])) {
+            return s;
+        } else {
+            char[] letters = s.ToCharArray();
+            letters[0] = char.ToUpper(letters[0]);
+            return new string(letters);
         }
     }
 }

@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ErrorHandling : MonoBehaviour {
+public class ConsoleResponseHandling : MonoBehaviour {
 
     public enum ErrorType {
         ValueNotFormattedCorrectly,
         InvalidCommand
     }
 
-    static public ErrorHandling instance;
+    public enum ResponseType {
+        Done
+    }
+
+    static public ConsoleResponseHandling instance;
 
     private void Awake() {
         instance = this;
@@ -29,5 +33,15 @@ public class ErrorHandling : MonoBehaviour {
                 break;
         }
         CanvasLogicInGame.instance.SetOutput(errorMessage);
+    }
+
+    public void ThrowResponse(ResponseType responseType, string blamedValue = null) {
+        string responseMessage = "";
+        switch (responseType) {
+            case ResponseType.Done:
+                responseMessage += "Done";
+                break;
+        }
+        CanvasLogicInGame.instance.SetOutput(responseMessage);
     }
 }

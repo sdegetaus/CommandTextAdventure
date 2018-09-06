@@ -21,6 +21,10 @@ public class CanvasLogicInGame : MonoBehaviour {
         console_OutputText.text += "> " + value + "\n";
     }
 
+    //public void ClearInput() {
+    //    console_OutputText.text = "";
+    //}
+
     public void ClearOutput() {
         console_OutputText.text = "";
     }
