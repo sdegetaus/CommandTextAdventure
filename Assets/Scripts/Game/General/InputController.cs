@@ -67,13 +67,12 @@ public class InputController : MonoBehaviour {
             // Removing Data if Memo has reached its limit
             if (memoList.Count >= memoLimit) { memoList.RemoveAt(0); }
             // Saving Data to Memoization
-            memoList.Add(string.Join(" ", inputWithoutSpaces));
+            memoList.Add(string.Join(" ", inputWithoutSpaces)); // Add it as an Object, not string?
         }
     }
 
     private void InputLengthChecker(string[] _inputSplit) {
         int _inputSplitLength = _inputSplit.Length;
-        Prueba(string.Join(" ", _inputSplit));
         switch (_inputSplitLength) {
             case 1:
                 // Action
@@ -103,7 +102,7 @@ public class InputController : MonoBehaviour {
 
     private void CallCommand(string _action, string _object = null, string _noun = null, string _var = null) {
         Debug.Log(_object + " | " + _action + " | " + _noun + " | " + _var);
-        
+
         // Around here: .ToLower()
 
         // Defensive Checker
@@ -121,7 +120,7 @@ public class InputController : MonoBehaviour {
     }
 
     private void ClearInput() {
-        inputField.text = "";
+        inputField.text = ""; // Maybe this method is superfluos...
     }
 
     #endregion
@@ -138,17 +137,10 @@ public class InputController : MonoBehaviour {
         if (memoPointer < 0) { memoPointer = memoList.Count - 1; }
         // If pointer is more than length, start at the beginning
         if (memoPointer >= memoList.Count) { memoPointer = 0; }
-        // Set input to the older value
+        // Set input to the selected value
         inputField.text = memoList[memoPointer];
     }
 
     #endregion
-
-    //private void LookUpCommand(string _action, string _object = "", string _noun = "", string _var = "") { }
-
-    public void Prueba(string que) {
-        outputText.text += "\n" + "> " + que;
-        outputText.text += "\n" + "> done";
-    }
 
 }
