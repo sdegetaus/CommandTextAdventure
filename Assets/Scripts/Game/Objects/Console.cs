@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class Console : MonoBehaviour {
 
@@ -92,6 +91,12 @@ public class Console : MonoBehaviour {
         string _noun = nounAndVar[0]; // variable name (key)
         string _var = nounAndVar[1]; // variable value (value)
 
+        // Help Suffix Text
+        if (_noun == "Help") {
+            Debug.Log("Help!");
+            return;
+        }
+
         // Limit variables to only one digit, for simplicity.
         if (_noun.Length > 1) {
             ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.OnlyOneDigitVariablesAllowed);
@@ -124,7 +129,12 @@ public class Console : MonoBehaviour {
     /// <param name="nounAndVar"></param>
     static public void Get(string[] nounAndVar) {
         string _noun = nounAndVar[0]; // variable name (key)
-        if(_noun == "All") {
+        // Help Suffix Text
+        if (_noun == "Help") {
+            Debug.Log("Help!");
+            return;
+        }
+        if (_noun == "All") {
             // If there are no variables, notify. If there are, loop over them.
             if (instance.localVariables.Count == 0) {
                 ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.ThereAreNoVariablesSet);
@@ -153,6 +163,11 @@ public class Console : MonoBehaviour {
     /// <param name="nounAndVar"></param>
     static public void Calc(string[] nounAndVar) {
         string _noun = nounAndVar[0]; // Mathematical Expression
+        // Help Suffix Text
+        if (_noun == "Help") {
+            Debug.Log("Help!");
+            return;
+        }
         string result = instance.LookAndApplyVariableValue(_noun).ToString();
         CanvasLogicInGame.instance.SetOutput(result);
     }

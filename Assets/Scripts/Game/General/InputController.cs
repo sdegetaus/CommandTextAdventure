@@ -18,8 +18,6 @@ public class InputController : MonoBehaviour {
 
     private readonly int memoLimit = 5;
     private int memoPointer;
-
-    //private char[] commandHooks = { ' ', '+', '-', '*', '/', '%', '='};
     
     private void Awake() {
         instance = this;
@@ -114,8 +112,14 @@ public class InputController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Calls the command throughout the project. 
+    /// </summary>
+    /// <param name="_action"></param>
+    /// <param name="_object"></param>
+    /// <param name="_noun"></param>
+    /// <param name="_var"></param>
     private void CallCommand(string _action, string _object = null, string _noun = null, string _var = null) {
-
         // Setting first char of every string to upper (except _var)
         _action = GlobalInputParser.SetFirstCharToUpper(_action);
         _object = GlobalInputParser.SetFirstCharToUpper(_object);
@@ -134,7 +138,6 @@ public class InputController : MonoBehaviour {
             return;
         }
         ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);
-        //Debug.Log(_object + " | " + _action + " | " + _noun + " | " + _var);
     }
 
     #endregion
