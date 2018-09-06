@@ -8,7 +8,7 @@ public class Console : MonoBehaviour {
 
     private Dictionary<string, double> localVariables = new Dictionary<string, double>();
 
-    // See dictionary in inspector
+    // Temporal Code: See localVariables in inspector
     [SerializeField] private List<string> localVariableKeys = new List<string>();
     [SerializeField] private List<double> localVariableValues = new List<double>();
 
@@ -48,6 +48,14 @@ public class Console : MonoBehaviour {
     /// <param name="nounAndVar"></param>
     static public void Clear(string[] nounAndVar = null) {
         CanvasLogicInGame.instance.ClearOutput();
+    }
+
+    /// <summary>
+    /// Quits the Application
+    /// </summary>
+    /// <param name="nounAndVar"></param>
+    static public void Quit(string[] nounAndVar = null) {
+        Application.Quit();
     }
 
     /// <summary>
