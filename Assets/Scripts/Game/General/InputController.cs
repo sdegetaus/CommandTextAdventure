@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Data;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
@@ -48,6 +46,10 @@ public class InputController : MonoBehaviour {
             NavigateMemo(KeyCode.DownArrow);
             inputField.ActivateInputField();
         }
+        if (Input.GetMouseButtonDown(0)) {
+            Debug.Log("Mouse click");
+            inputField.ActivateInputField();
+        }
     }
 
     #region Input Readers
@@ -69,37 +71,7 @@ public class InputController : MonoBehaviour {
             }
             string[] inputWithoutSpaces = tempList.ToArray();
 
-            List<string> arithmeticList = new List<string>();
-            for (int i = 0; i < inputWithoutSpaces.Length; i++) {
-                foreach(char c in inputWithoutSpaces[i]) {
-                    if (c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '=') {
-                        Debug.Log("Arithmetic Evaluation!");
-                        arithmeticList.Add(c.ToString());
-                    }
-                    Debug.Log(c);
-                }
-            }
-
-
-            //Debug.Log(string.Join("@", arithmeticList.ToArray()));
-
-            //object result = new DataTable().Compute("(3+3)*2+1", null);
-            //int res = Convert.ToInt32(result);
-            //Debug.Log(res.ToString());
-
-            DataTable dt = new DataTable();
-            var v = dt.Compute("3 * (2+4)", "");
-            Debug.Log(v.ToString());
-
-            // Test
-            //for (int i = 0; i < inputWithoutSpaces.Length; i++) {
-            //    if(inputWithoutSpaces[i] == "+" || inputWithoutSpaces[i] == "-" || inputWithoutSpaces[i] == "*" || inputWithoutSpaces[i] == "/" || inputWithoutSpaces[i] == "%") {
-            //        Debug.Log("Arithmetic Operation!");
-            //    }
-            //    if (inputWithoutSpaces[i] == "var") {
-            //        Debug.Log("Variable Assigning!");
-            //    }
-            //}
+            //Debug.Log(GlobalInputParser.IsArithmeticOperation(inputWithoutSpaces)); --> TODO
 
             InputLengthChecker(inputWithoutSpaces);
             tempList.Clear();
@@ -114,7 +86,8 @@ public class InputController : MonoBehaviour {
     private void InputLengthChecker(string[] _inputSplit) {
         int _inputSplitLength = _inputSplit.Length;
         CanvasLogicInGame.instance.SetOutput(string.Join(" ", _inputSplit));
-        switch (_inputSplitLength) {
+        switch (_inputSplitLength)
+        {
             case 1:
                 // Action
                 Debug.Log("Action");
@@ -175,8 +148,8 @@ public class InputController : MonoBehaviour {
     /// <returns>Null</returns>
     public string InvokeStringMethod(string methodName, string className = null, string[] stringParams = null) {
         Type calledType = Type.GetType(className);
-        String s = (String)calledType.InvokeMember(methodName, BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static, null, null,
-                    new System.Object[] { stringParams });
+        String s = (String)calledType.InvokeMember(methodName, BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Static,
+                   null, null, new System.Object[] { stringParams });
         return s;
     }
 
@@ -201,5 +174,4 @@ public class InputController : MonoBehaviour {
     private void ClearInput() {
         inputField.text = ""; // Maybe this method is superfluos...
     }
-
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Data;
+using System.Collections.Generic;
 
 /// <summary>
 /// GlobalInputParser is a regular C# class that contains a set of methods which help with common string to "object" parsing. For example, hexadecimal value to a color.
@@ -63,5 +64,37 @@ public class GlobalInputParser {
             letters[0] = char.ToUpper(letters[0]);
             return new string(letters);
         }
+    }
+
+    // WIP
+    static public bool IsArithmeticOperation(string[] s) {
+        int count = 0;
+        for (int i = 0; i < s.Length; i++) {
+            foreach (char c in s[i]) {
+                if ((c == '+' || c == '-' || c == '*' || c == '/' || c == '%') && !char.IsLetter(c) && c != '=') {
+                    count++;
+                    Debug.Log(count);
+                }
+            }
+        }
+        Debug.Log(count + "?=" + s.Length);
+        if (count == s.Length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Evaluates a string mathematical expression and return the answer. Code by: Petar Repac at https://stackoverflow.com/a/1417488/8869187.
+    /// </summary>
+    /// <param name="expression">String passed as an expression.</param>
+    /// <returns>Mathematical Expression Result</returns>
+    static public double EvaluateMathExpression(string expression) {
+        var loDataTable = new DataTable();
+        var loDataColumn = new DataColumn("Eval", typeof(double), expression);
+        loDataTable.Columns.Add(loDataColumn);
+        loDataTable.Rows.Add(0);
+        return (double)(loDataTable.Rows[0]["Eval"]);
     }
 }
