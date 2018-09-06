@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ public class InputController : MonoBehaviour {
     private readonly int memoLimit = 5;
     private int memoPointer;
 
+    //private char[] commandHooks = { ' ', '+', '-', '*', '/', '%', '='};
+    
     private void Awake() {
         instance = this;
     }
@@ -65,6 +68,39 @@ public class InputController : MonoBehaviour {
                 }
             }
             string[] inputWithoutSpaces = tempList.ToArray();
+
+            List<string> arithmeticList = new List<string>();
+            for (int i = 0; i < inputWithoutSpaces.Length; i++) {
+                foreach(char c in inputWithoutSpaces[i]) {
+                    if (c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '=') {
+                        Debug.Log("Arithmetic Evaluation!");
+                        arithmeticList.Add(c.ToString());
+                    }
+                    Debug.Log(c);
+                }
+            }
+
+
+            //Debug.Log(string.Join("@", arithmeticList.ToArray()));
+
+            //object result = new DataTable().Compute("(3+3)*2+1", null);
+            //int res = Convert.ToInt32(result);
+            //Debug.Log(res.ToString());
+
+            DataTable dt = new DataTable();
+            var v = dt.Compute("3 * (2+4)", "");
+            Debug.Log(v.ToString());
+
+            // Test
+            //for (int i = 0; i < inputWithoutSpaces.Length; i++) {
+            //    if(inputWithoutSpaces[i] == "+" || inputWithoutSpaces[i] == "-" || inputWithoutSpaces[i] == "*" || inputWithoutSpaces[i] == "/" || inputWithoutSpaces[i] == "%") {
+            //        Debug.Log("Arithmetic Operation!");
+            //    }
+            //    if (inputWithoutSpaces[i] == "var") {
+            //        Debug.Log("Variable Assigning!");
+            //    }
+            //}
+
             InputLengthChecker(inputWithoutSpaces);
             tempList.Clear();
 
