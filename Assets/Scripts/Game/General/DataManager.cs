@@ -21,7 +21,6 @@ public class DataManager : MonoBehaviour {
 
     public void SetCoins(int amount) {
         totalCoins += amount;
-        Debug.Log("Total Coins " + totalCoins);
         PlayerPrefs.SetInt(_Cn.data_TotalCoins, totalCoins);
     }
 

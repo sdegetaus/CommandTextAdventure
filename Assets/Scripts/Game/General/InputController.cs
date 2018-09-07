@@ -17,6 +17,9 @@ public class InputController : MonoBehaviour {
 
     private readonly int memoLimit = 5;
     private int memoPointer;
+
+    //[HideInInspector]
+    public bool isCoroutineFinished; // Used to call output after coroutine is finished (used in special places)
     
     private void Awake() {
         instance = this;
@@ -26,6 +29,7 @@ public class InputController : MonoBehaviour {
         CanvasLogicInGame.instance.ClearInput();
         CanvasLogicInGame.instance.ActivateInputField();
         memoPointer = memoList.Count;
+        isCoroutineFinished = true;
     }
 
     private void Update() {
@@ -46,7 +50,6 @@ public class InputController : MonoBehaviour {
             CanvasLogicInGame.instance.ActivateInputField();
         }
         if (Input.GetMouseButtonDown(0)) {
-            Debug.Log("Mouse click");
             CanvasLogicInGame.instance.ActivateInputField();
         }
     }
@@ -118,6 +121,7 @@ public class InputController : MonoBehaviour {
     /// <param name="_noun"></param>
     /// <param name="_var"></param>
     private void CallCommand(string _action, string _object = null, string _noun = null, string _var = null) {
+
         // Setting first char of every string to upper (except _var)
         _action = GlobalInputParser.SetFirstCharToUpper(_action);
         _object = GlobalInputParser.SetFirstCharToUpper(_object);
@@ -135,8 +139,10 @@ public class InputController : MonoBehaviour {
             ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
             return;
         }
-        
-        ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);
+
+        // ToDo
+        //OutputController.instance.Output();
+        //ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);  
     }
 
     #endregion

@@ -66,6 +66,19 @@ public class GlobalInputParser {
         }
     }
 
+    /// <summary>
+    /// Evaluates a string mathematical expression and return the answer. Code by: Petar Repac at https://stackoverflow.com/a/1417488/8869187.
+    /// </summary>
+    /// <param name="expression">String passed as an expression.</param>
+    /// <returns>Mathematical Expression Result</returns>
+    static public double EvaluateMathExpression(string expression) {
+        var loDataTable = new DataTable();
+        var loDataColumn = new DataColumn("Eval", typeof(double), expression);
+        loDataTable.Columns.Add(loDataColumn);
+        loDataTable.Rows.Add(0);
+        return (double)(loDataTable.Rows[0]["Eval"]);
+    }
+
     // WIP - Doesn't work atm
     static public bool IsArithmeticOperation(string[] s) {
         int count = 0;
@@ -83,18 +96,5 @@ public class GlobalInputParser {
         } else {
             return false;
         }
-    }
-
-    /// <summary>
-    /// Evaluates a string mathematical expression and return the answer. Code by: Petar Repac at https://stackoverflow.com/a/1417488/8869187.
-    /// </summary>
-    /// <param name="expression">String passed as an expression.</param>
-    /// <returns>Mathematical Expression Result</returns>
-    static public double EvaluateMathExpression(string expression) {
-        var loDataTable = new DataTable();
-        var loDataColumn = new DataColumn("Eval", typeof(double), expression);
-        loDataTable.Columns.Add(loDataColumn);
-        loDataTable.Rows.Add(0);
-        return (double)(loDataTable.Rows[0]["Eval"]);
     }
 }

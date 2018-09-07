@@ -34,8 +34,12 @@ public class CanvasLogicInGame : MonoBehaviour {
         console_InputField.text = value;
     }
 
-    public void SetOutput(string value) {
-        console_OutputText.text += "> " + value + "\n";
+    public void SetOutput(string value, bool addLineCharacters = true) {
+        if (addLineCharacters) {
+            console_OutputText.text += "> " + value + "\n";
+        } else {
+            console_OutputText.text += value;
+        }
     }
 
     public void ClearInput() {
