@@ -19,6 +19,8 @@ public class DataManager : MonoBehaviour {
         totalCoins = PlayerPrefs.GetInt(_Cn.data_TotalCoins, 0);
     }
 
+    #region Currency Methods
+
     public void SetCoins(int amount) {
         totalCoins += amount;
         PlayerPrefs.SetInt(_Cn.data_TotalCoins, totalCoins);
@@ -27,6 +29,8 @@ public class DataManager : MonoBehaviour {
     public int GetCoins() {
         return PlayerPrefs.GetInt(_Cn.data_TotalCoins);
     }
+
+    #endregion
 
 
 

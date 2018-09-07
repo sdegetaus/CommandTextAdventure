@@ -121,7 +121,6 @@ public class InputController : MonoBehaviour {
     /// <param name="_noun"></param>
     /// <param name="_var"></param>
     private void CallCommand(string _action, string _object = null, string _noun = null, string _var = null) {
-
         // Setting first char of every string to upper (except _var)
         _action = GlobalInputParser.SetFirstCharToUpper(_action);
         _object = GlobalInputParser.SetFirstCharToUpper(_object);

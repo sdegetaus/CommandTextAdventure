@@ -17,6 +17,11 @@ public class ConsoleResponseHandling : MonoBehaviour {
         ThereAreNoVariablesSet
     }
 
+    public enum PlayerRestrictions {
+        PlayerNotAtCorrectLocation,
+        PlayerAlreadyAtLocation
+    }
+
     static public ConsoleResponseHandling instance;
 
     private void Awake() {
@@ -59,5 +64,18 @@ public class ConsoleResponseHandling : MonoBehaviour {
                 break;
         }
         CanvasLogicInGame.instance.SetOutput(responseMessage);
+    }
+
+    public void ThrowRestriction(PlayerRestrictions playerRestrictions, string blamedValue = null) {
+        string restrictionMessage = "NOT ALLOWED: ";
+        switch (playerRestrictions) {
+            case PlayerRestrictions.PlayerNotAtCorrectLocation:
+                restrictionMessage += "The player is not at " + blamedValue;
+                break;
+            case PlayerRestrictions.PlayerAlreadyAtLocation:
+                restrictionMessage += "The player is already at " + blamedValue;
+                break;
+        }
+        CanvasLogicInGame.instance.SetOutput(restrictionMessage);
     }
 }
