@@ -7,7 +7,8 @@ using UnityEngine;
 public class _Cn  {
 
     //public enum Object { Console, Game }
+    public const string data_TotalCoins = "data_TotalCoins";
 
-   
+
 
 }

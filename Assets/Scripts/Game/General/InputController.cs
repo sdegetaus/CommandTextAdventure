@@ -13,7 +13,6 @@ public class InputController : MonoBehaviour {
 
     static public InputController instance;
 
-    [SerializeField] private TMP_InputField inputField;
     [SerializeField] private List<string> memoList;
 
     private readonly int memoLimit = 5;
@@ -24,29 +23,31 @@ public class InputController : MonoBehaviour {
     }
 
     private void Start() {
-        inputField.text = "";
-        inputField.ActivateInputField();
+        CanvasLogicInGame.instance.ClearInput();
+        CanvasLogicInGame.instance.ActivateInputField();
         memoPointer = memoList.Count;
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Return)) {
-            InputParser(inputField.text);
-            ClearInput();
-            inputField.ActivateInputField();
+            InputParser(CanvasLogicInGame.instance.GetInputText());
+            CanvasLogicInGame.instance.ClearInput();
+            CanvasLogicInGame.instance.ActivateInputField();
             memoPointer = memoList.Count; // Restart Memo Navigation
         }
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             NavigateMemo(KeyCode.UpArrow);
-            inputField.ActivateInputField();
+            CanvasLogicInGame.instance.SetCaretToEnd();
+            CanvasLogicInGame.instance.ActivateInputField();
         }
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
             NavigateMemo(KeyCode.DownArrow);
-            inputField.ActivateInputField();
+            CanvasLogicInGame.instance.SetCaretToEnd();
+            CanvasLogicInGame.instance.ActivateInputField();
         }
         if (Input.GetMouseButtonDown(0)) {
             Debug.Log("Mouse click");
-            inputField.ActivateInputField();
+            CanvasLogicInGame.instance.ActivateInputField();
         }
     }
 
@@ -68,9 +69,6 @@ public class InputController : MonoBehaviour {
                 }
             }
             string[] inputWithoutSpaces = tempList.ToArray();
-
-            //Debug.Log(GlobalInputParser.IsArithmeticOperation(inputWithoutSpaces)); --> TODO
-
             InputLengthChecker(inputWithoutSpaces);
             tempList.Clear();
 
@@ -137,6 +135,7 @@ public class InputController : MonoBehaviour {
             ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
             return;
         }
+        
         ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);
     }
 
@@ -161,7 +160,7 @@ public class InputController : MonoBehaviour {
     private void NavigateMemo(KeyCode keyCode) {
         // If the list count is 0, we assume it is empty
         if(memoList.Count == 0) { return; }
-        ClearInput();
+        CanvasLogicInGame.instance.ClearInput();
         // Up: pointer - 1 | Down: pointer + 1
         if (keyCode == KeyCode.UpArrow) { memoPointer--; } else { memoPointer++; }
         // If pointer is less than zero, start at end
@@ -169,12 +168,11 @@ public class InputController : MonoBehaviour {
         // If pointer is more than length, start at the beginning
         if (memoPointer >= memoList.Count) { memoPointer = 0; }
         // Set input to the selected value
-        inputField.text = memoList[memoPointer];
+        CanvasLogicInGame.instance.SetInput(memoList[memoPointer]);
+        CanvasLogicInGame.instance.SetCaretToEnd();
+
     }
 
     #endregion
 
-    private void ClearInput() {
-        inputField.text = ""; // Maybe this method is superfluos...
-    }
 }

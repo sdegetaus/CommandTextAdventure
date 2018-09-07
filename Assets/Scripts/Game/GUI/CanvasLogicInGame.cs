@@ -9,6 +9,7 @@ public class CanvasLogicInGame : MonoBehaviour {
     static public CanvasLogicInGame instance;
 
     [SerializeField] private Image console_BG;
+    [SerializeField] private TMP_InputField console_InputField;
     [SerializeField] private TMP_Text console_InputText;
     [SerializeField] private TMP_Text console_InputTextPlaceholder;
     [SerializeField] private TMP_Text console_OutputText;
@@ -17,13 +18,29 @@ public class CanvasLogicInGame : MonoBehaviour {
         instance = this;
     }
 
+    public string GetInputText() {
+        return console_InputField.text;
+    }
+
+    public void ActivateInputField() {
+        console_InputField.ActivateInputField();
+    }
+
+    public void SetCaretToEnd() {
+        console_InputField.caretPosition = GetInputText().Length;
+    }
+
+    public void SetInput(string value) {
+        console_InputField.text = value;
+    }
+
     public void SetOutput(string value) {
         console_OutputText.text += "> " + value + "\n";
     }
 
-    //public void ClearInput() {
-    //    console_OutputText.text = "";
-    //}
+    public void ClearInput() {
+        console_InputField.text = "";
+    }
 
     public void ClearOutput() {
         console_OutputText.text = "";

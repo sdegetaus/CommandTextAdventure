@@ -58,11 +58,15 @@ public class Console : MonoBehaviour {
         Application.Quit();
     }
 
+    //static public void Print(string[] nounAndVar) {
+    //    CanvasLogicInGame.instance.SetOutput(string.Join("", nounAndVar));
+    //}
+
     /// <summary>
     /// Changes background or text color of console.
     /// </summary>
     /// <param name="nounAndVar"></param>
-    static public void Change(string[] nounAndVar) {
+    static public void Color(string[] nounAndVar) {
         string _noun = nounAndVar[0]; // Bg or Text, Invert || Help
         string _var = nounAndVar[1]; // Hexadecimal Value
 
