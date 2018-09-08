@@ -123,6 +123,7 @@ public class Player : MonoBehaviour {
 
     private IEnumerator WorkTime(float seconds) {
         string waitDots = "...";
+        CanvasLogicInGame.instance.SetInputActive(false);
         CanvasLogicInGame.instance.SetOutput("working ", false);
         foreach (char c in waitDots) {
             CanvasLogicInGame.instance.SetOutput(c.ToString() + " ", false);
@@ -132,10 +133,12 @@ public class Player : MonoBehaviour {
         int valueGained = 5; // Set dynamically
         DataManager.instance.SetCoins(valueGained);
         CanvasLogicInGame.instance.SetOutput("Coins gained: " + valueGained);
+        CanvasLogicInGame.instance.SetInputActive(true);
     }
 
     private IEnumerator GotoTime(float seconds) {
         string waitDots = "...";
+        CanvasLogicInGame.instance.SetInputActive(false);
         CanvasLogicInGame.instance.SetOutput("travelling ", false);
         foreach (char c in waitDots)
         {
@@ -144,6 +147,7 @@ public class Player : MonoBehaviour {
         }
         CanvasLogicInGame.instance.SetOutput("\n", false);
         CanvasLogicInGame.instance.SetOutput("Player has arrived to: " + instance.currentPlayerLocation.ToString());
+        CanvasLogicInGame.instance.SetInputActive(true);
     }
     #endregion
 

@@ -23,6 +23,13 @@ public class CanvasLogicInGame : MonoBehaviour {
         SetOutput("Welcome Message!", true);
     }
 
+    public void SetInputActive(bool active) {
+        console_InputField.interactable = active;
+        if (active) {
+            console_InputField.ActivateInputField();
+        }
+    }
+
     public string GetInputText() {
         return console_InputField.text;
     }
