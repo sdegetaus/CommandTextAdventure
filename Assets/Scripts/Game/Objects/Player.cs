@@ -24,6 +24,17 @@ public class Player : MonoBehaviour {
     }
 
     #region Player Actions
+    static public void Help(string[] nounAndVar = null) {
+        CanvasLogicInGame.instance.SetOutput("Player available commands: \n" +
+                                             "\n" +
+                                             "-> stats" + "\n" +
+                                             "-> get <noun>" + "\n" +
+                                             "-> set <noun>" + "\n" +
+                                             "-> goto <location>" + "\n" +
+                                             "-> work" + "\n" +
+                                             "-> buy <noun> " + "\n \n" +
+                                             "Type \"help\" after a command to get help" + "\n");
+    }
 
     static public void Stats(string[] nounAndVar = null) {
         //ToDo

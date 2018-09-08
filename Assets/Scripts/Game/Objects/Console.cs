@@ -31,15 +31,16 @@ public class Console : MonoBehaviour {
     /// </summary>
     /// <param name="nounAndVar"></param>
     static public void Help(string[] nounAndVar = null) {
-        CanvasLogicInGame.instance.SetOutput(
-            Application.productName + " is a game about exploration. \n" +
-            "Just like your regular Windows Command Prompt... TODO. \n" +
-            "Here are a list of commands you can use to get you started: \n" +
-            "about - get information about this game. \n" +
-            "help - get help. \n" +
-            "clear - clear the command output. \n" +
-            "change - change the color of bg or text"
-            );
+        CanvasLogicInGame.instance.SetOutput("Console available commands: \n" +
+                                             "\n" +
+                                             "-> about" + "\n" +
+                                             "-> clear" + "\n" +
+                                             "-> quit" + "\n" +
+                                             "-> change <noun> <var>" + "\n" +
+                                             "-> get <noun> <var>" + "\n" +
+                                             "-> set <noun> <var>" + "\n" +
+                                             "-> calc <expression>" + "\n" + "\n" +
+                                             "Type \"help\" after a command to get help" + "\n");
     }
 
     /// <summary>
@@ -66,7 +67,7 @@ public class Console : MonoBehaviour {
     /// Changes background or text color of console.
     /// </summary>
     /// <param name="nounAndVar"></param>
-    static public void Color(string[] nounAndVar) {
+    static public void Change(string[] nounAndVar) {
         string _noun = nounAndVar[0]; // Bg or Text, Invert || Help
         string _var = nounAndVar[1]; // Hexadecimal Value
 
@@ -78,8 +79,10 @@ public class Console : MonoBehaviour {
                 CanvasLogicInGame.instance.SetUIColors(GlobalInputParser.StringToColor(_var), false);
                 break;
             case "Help":
-                CanvasLogicInGame.instance.SetOutput("To change the colors of the console background or text, you must follow this structure: console change bg/text <hexadecimal-color> \n " +
-                                                     "Furthermore, if you wish to invert the colors of both parameters: console invert");
+                CanvasLogicInGame.instance.SetOutput("console change bg / text <hex-value>  OR  console change invert  OR  console invert \n");
+                break;
+            case "Invert":
+                Invert();
                 break;
             default:
                 ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
