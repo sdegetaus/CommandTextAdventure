@@ -1,31 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class OutputController : MonoBehaviour {
 
     static public OutputController instance;
 
+    [SerializeField] private TMP_InputField inputRT;
+    [SerializeField] private TMP_Text outputRT;
+
+    [SerializeField] private RectTransform consoleMargins;
+
     private void Awake() {
         instance = this;
     }
 
-    //public void Output(bool wait = false) {
-    //    if (!wait) {
-    //        ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);
-    //    } else {
-    //        StartCoroutine(WaitToOutput(5.0f));
-    //    }
-    //}
+    private void Start() {
+        outputRT.text = "";
+        inputRT.text = "";
+    }
 
-    //private IEnumerator WaitToOutput(float seconds) { 
-    //    string waitDots = "......";
-    //    foreach (char c in waitDots){
-    //        CanvasLogicInGame.instance.SetOutput(c.ToString() + " ", false);
-    //        yield return new WaitForSeconds(5.0f / waitDots.Length);
-    //    }             
-    //    CanvasLogicInGame.instance.SetOutput("\n", false);
-    //    ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);
-    //}
+    private void Update() {
+        if(Input.GetKeyDown(KeyCode.Return)) {
+            outputRT.text += "\n" + inputRT.text;
+            inputRT.text = "";
+            inputRT.ActivateInputField();
+        }
+    }
 
 }

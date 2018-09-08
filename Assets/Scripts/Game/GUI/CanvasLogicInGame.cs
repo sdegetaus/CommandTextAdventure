@@ -13,9 +13,14 @@ public class CanvasLogicInGame : MonoBehaviour {
     [SerializeField] private TMP_Text console_InputText;
     [SerializeField] private TMP_Text console_InputTextPlaceholder;
     [SerializeField] private TMP_Text console_OutputText;
+    [SerializeField] private TMP_Text console_BracketText;
 
     private void Awake() {
         instance = this;
+    }
+
+    private void Start() {
+        SetOutput("Welcome Message!", true);
     }
 
     public string GetInputText() {
@@ -57,6 +62,7 @@ public class CanvasLogicInGame : MonoBehaviour {
             console_InputText.color = color;
             console_InputTextPlaceholder.color = color;
             console_OutputText.color = color;
+            console_BracketText.color = color;
         }
     }
 
@@ -66,6 +72,7 @@ public class CanvasLogicInGame : MonoBehaviour {
         console_InputText.color = textInverted;
         console_InputTextPlaceholder.color = textInverted;
         console_OutputText.color = textInverted;
+        console_BracketText.color = textInverted;
     }
 
 }
