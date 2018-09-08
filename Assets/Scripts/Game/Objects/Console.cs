@@ -12,8 +12,18 @@ public class Console : MonoBehaviour {
     [SerializeField] private List<string> localVariableKeys = new List<string>();
     [SerializeField] private List<double> localVariableValues = new List<double>();
 
+    private ConsoleResponseHandling consoleResponseHandling;
+    private CanvasLogicInGame canvasLogicInGame;
+    private DataManager dataManager;
+
     private void Awake() {
         instance = this;
+    }
+
+    private void Start() {
+        consoleResponseHandling = ConsoleResponseHandling.instance;
+        canvasLogicInGame = CanvasLogicInGame.instance;
+        dataManager = DataManager.instance;
     }
 
     #region Console Actions
@@ -23,7 +33,7 @@ public class Console : MonoBehaviour {
     /// <param name="nounAndVar"></param>
     static public void About(string[] nounAndVar = null) {
         // To move into another file (the text)
-        CanvasLogicInGame.instance.SetOutput("Command Text Adventure is a singled-person developed game by Santiago Degetau. \n" + "Version: " + Application.version);
+        instance.canvasLogicInGame.SetOutput("Command Text Adventure is a singled-person developed game by Santiago Degetau. \n" + "Version: " + Application.version);
     }
 
     /// <summary>
@@ -31,7 +41,7 @@ public class Console : MonoBehaviour {
     /// </summary>
     /// <param name="nounAndVar"></param>
     static public void Help(string[] nounAndVar = null) {
-        CanvasLogicInGame.instance.SetOutput("Console available commands: \n" +
+        instance.canvasLogicInGame.SetOutput("Console available commands: \n" +
                                              "\n" +
                                              "-> about" + "\n" +
                                              "-> clear" + "\n" +
@@ -48,7 +58,7 @@ public class Console : MonoBehaviour {
     /// </summary>
     /// <param name="nounAndVar"></param>
     static public void Clear(string[] nounAndVar = null) {
-        CanvasLogicInGame.instance.ClearOutput();
+        instance.canvasLogicInGame.ClearOutput();
     }
 
     /// <summary>
@@ -73,19 +83,19 @@ public class Console : MonoBehaviour {
 
         switch(_noun) {
             case "Bg":
-                CanvasLogicInGame.instance.SetUIColors(GlobalInputParser.StringToColor(_var), true);
+                instance.canvasLogicInGame.SetUIColors(GlobalInputParser.StringToColor(_var), true);
                 break;
             case "Text":
-                CanvasLogicInGame.instance.SetUIColors(GlobalInputParser.StringToColor(_var), false);
+                instance.canvasLogicInGame.SetUIColors(GlobalInputParser.StringToColor(_var), false);
                 break;
             case "Help":
-                CanvasLogicInGame.instance.SetOutput("console change bg / text <hex-value>  OR  console change invert  OR  console invert \n");
+                instance.canvasLogicInGame.SetOutput("You can change the console bg and text colors:\n console change bg / text <hex-value>  OR  console change invert  OR  console invert \n");
                 break;
             case "Invert":
                 Invert();
                 break;
             default:
-                ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
+                instance.consoleResponseHandling.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
                 return;
         }
     }
@@ -95,7 +105,7 @@ public class Console : MonoBehaviour {
     /// </summary>
     /// <param name="nounAndVar"></param>
     static public void Invert(string[] nounAndVar = null) {
-        CanvasLogicInGame.instance.InvertUIColors();
+        instance.canvasLogicInGame.InvertUIColors();
     }
 
     /// <summary>
@@ -108,19 +118,19 @@ public class Console : MonoBehaviour {
 
         // Help Suffix Text
         if (_noun == "Help") {
-            Debug.Log("Help!");
+            instance.canvasLogicInGame.SetOutput("You can set local temporal variables: console set <var> <value>");
             return;
         }
 
         // Limit variables to only one digit, for simplicity.
         if (_noun.Length > 1) {
-            ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.OnlyOneDigitVariablesAllowed);
+            instance.consoleResponseHandling.ThrowError(ConsoleResponseHandling.ErrorType.OnlyOneDigitVariablesAllowed);
             return;
         }
 
         // Checking if noun is a letter, if not return with ThrowError
         if (!char.IsLetter(_noun[0])) {
-            ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.VariablesCanOnlyBeLetters);
+            instance.consoleResponseHandling.ThrowError(ConsoleResponseHandling.ErrorType.VariablesCanOnlyBeLetters);
             return;
         }
 
@@ -146,18 +156,18 @@ public class Console : MonoBehaviour {
         string _noun = nounAndVar[0]; // variable name (key)
         // Help Suffix Text
         if (_noun == "Help") {
-            Debug.Log("Help!");
+            instance.canvasLogicInGame.SetOutput("You can get values saved in the console: console get <var>  OR  console get all");
             return;
         }
         if (_noun == "All") {
             // If there are no variables, notify. If there are, loop over them.
             if (instance.localVariables.Count == 0) {
-                ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.ThereAreNoVariablesSet);
+                instance.consoleResponseHandling.ThrowResponse(ConsoleResponseHandling.ResponseType.ThereAreNoVariablesSet);
                 return;
             } else {
-                CanvasLogicInGame.instance.SetOutput("There are currently " + instance.localVariables.Count + " variables:");
+                instance.canvasLogicInGame.SetOutput("There are currently " + instance.localVariables.Count + " variables:");
                 foreach (KeyValuePair<string, double> entry in instance.localVariables) {
-                    CanvasLogicInGame.instance.SetOutput(entry.Key + " -> " + entry.Value);
+                    instance.canvasLogicInGame.SetOutput(entry.Key + " -> " + entry.Value);
                 }
             }
             return;
@@ -180,11 +190,19 @@ public class Console : MonoBehaviour {
         string _noun = nounAndVar[0]; // Mathematical Expression
         // Help Suffix Text
         if (_noun == "Help") {
-            Debug.Log("Help!");
+            instance.canvasLogicInGame.SetOutput("You can calculate values: console calc <math-expression>; local variables are allowed");
             return;
         }
         string result = instance.LookAndApplyVariableValue(_noun).ToString();
-        CanvasLogicInGame.instance.SetOutput(result);
+        instance.canvasLogicInGame.SetOutput(result);
+    } 
+    
+    /// <summary>
+    /// Calculates mathematical expression. Variables are allowed.
+    /// </summary>
+    /// <param name="nounAndVar"></param>
+    static public void Reset(string[] nounAndVar = null) {
+        PlayerPrefs.DeleteAll();
     }
 
     #endregion
@@ -203,7 +221,7 @@ public class Console : MonoBehaviour {
                 if (instance.localVariables.ContainsKey(c.ToString())) {
                     expressionParsed.Add(instance.localVariables[c.ToString()].ToString());
                 } else {
-                    ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.LocalVariableNotFound, c.ToString());
+                    instance.consoleResponseHandling.ThrowError(ConsoleResponseHandling.ErrorType.LocalVariableNotFound, c.ToString());
                     expressionParsed.Clear();
                     return 0;
                 }

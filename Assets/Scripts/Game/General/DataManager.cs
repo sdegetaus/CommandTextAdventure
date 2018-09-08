@@ -11,6 +11,9 @@ public class DataManager : MonoBehaviour {
 
     private int totalCoins;
 
+    private int stats_totalCoins { get { return PlayerPrefs.GetInt(_Cn.data_TotalCoins); } set { PlayerPrefs.SetInt(_Cn.data_TotalCoins, value); } }
+    private int data_PlayerLocation { get { return PlayerPrefs.GetInt(_Cn.data_PlayerLocation); } set { PlayerPrefs.SetInt(_Cn.data_TotalCoins, value);  } }
+
     private void Awake() {
         instance = this;
     }
@@ -22,8 +25,8 @@ public class DataManager : MonoBehaviour {
     #region Currency Methods
 
     public void SetCoins(int amount) {
-        totalCoins += amount;
-        PlayerPrefs.SetInt(_Cn.data_TotalCoins, totalCoins);
+        stats_totalCoins += amount;
+        //PlayerPrefs.SetInt(_Cn.data_TotalCoins, totalCoins);
     }
 
     public int GetCoins() {
@@ -32,6 +35,18 @@ public class DataManager : MonoBehaviour {
 
     #endregion
 
+    #region Location Methods
 
+    public PlayerLocation GetPlayerCurrentLocation() {
+        Debug.Log((PlayerLocation)data_PlayerLocation);
+        return (PlayerLocation)data_PlayerLocation;
+    }
+
+    public void SetPlayerCurrentLocation(PlayerLocation playerLocation) {
+        data_PlayerLocation = (int)(PlayerLocation)playerLocation;
+        Debug.Log((PlayerLocation)data_PlayerLocation);
+    }
+
+    #endregion
 
 }

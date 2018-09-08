@@ -24,8 +24,8 @@ public class CanvasLogicInGame : MonoBehaviour {
         SetOutput("Welcome to Console TextAdventure! This game is all about exploration, only a few basic commands are going to be provided for you. What you have to know is that most commands follow this structure: <object> <.action> <noun> <variable>. \n" +
             "For example, to change the console background color, you would have to write this: console change bg #ff0ff0 \n", true);
         SetOutput("Here is a list of commands to get you started: \n", false);
-        SetOutput("console help \n", false);
-        SetOutput("player help \n", false);
+        SetOutput("-> console help \n", false);
+        SetOutput("-> player help \n", false);
         SetOutput("\n", false);
         // [...]
     }
