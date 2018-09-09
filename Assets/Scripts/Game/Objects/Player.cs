@@ -6,8 +6,6 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     static public Player instance;
-    private PlayerLocation currentPlayerLocation;
-    private PlayerLocation previousPlayerLocation;
 
     private ResponseHandling responseHandling;
     private OutputController outputController;
@@ -21,8 +19,11 @@ public class Player : MonoBehaviour {
         responseHandling = ResponseHandling.instance;
         outputController = OutputController.instance;
         dataManager = DataManager.instance;
+    }
 
-        currentPlayerLocation = PlayerLocation.Home;
+    //Debug
+    private void Update() {
+        Debug.Log(dataManager.GetPlayerCurrentLocation().ToString());
     }
 
     #region Player Actions
@@ -30,7 +31,7 @@ public class Player : MonoBehaviour {
     /// <summary>
     /// Player Stats - command displayer method
     /// </summary>
-    /// <param name="nounAndVar"></param>
+    /// <param name="nounAndVar"></param>   
     static public void Help(string[] nounAndVar = null) {
         instance.outputController.SetOutput("Player available commands: \n" +
                                              "\n" +
@@ -61,40 +62,33 @@ public class Player : MonoBehaviour {
     static public void Goto(string[] nounAndVar = null) {
         string _noun = nounAndVar[0]; // Place
         string _var = nounAndVar[1]; // ... todo, perhas adverbs of time (how quickly the player can get there).
-        bool isHelp = false;
         switch(_noun) {
             case "Home":
-                instance.previousPlayerLocation = instance.currentPlayerLocation;
-                instance.currentPlayerLocation = PlayerLocation.Home;
+                //instance.dataManager.previousPlayerLocation = instance.dataManager.currentPlayerLocation;
+                instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.Home);
                 break;
             case "Work":
-                instance.previousPlayerLocation = instance.currentPlayerLocation;
-                instance.currentPlayerLocation = PlayerLocation.Work;
+                //instance.dataManager.previousPlayerLocation = instance.dataManager.currentPlayerLocation;
+                instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.Work);
                 break;
             case "Store":
-                instance.previousPlayerLocation = instance.currentPlayerLocation;
-                instance.currentPlayerLocation = PlayerLocation.Store;
+                //instance.dataManager.previousPlayerLocation = instance.dataManager.currentPlayerLocation;
+                instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.Store);
                 break;
             case "Help":
                 instance.outputController.SetOutput("You can go to other places in the world: player goto <location>");
                 instance.PrintAvailableLocations();
-                isHelp = true;
-                break;
+                return;
             default:
                 instance.responseHandling.ThrowError(ErrorType.InvalidCommand);
                 return;
         }
 
-        // If player types help, do not run the las bit of code
-        if(isHelp) {
-            return;
-        }
-
-        if (instance.previousPlayerLocation == instance.currentPlayerLocation) {
+        if (instance.dataManager.previousPlayerLocation == instance.dataManager.currentPlayerLocation) {
             instance.responseHandling.ThrowRestriction(PlayerRestrictions.PlayerAlreadyAtLocation, _noun);
             return;
         } else {
-            instance.StartCoroutine(instance.GotoTime(5.0f));
+            instance.StartCoroutine(instance.GotoTime(0.0f));
         }
     }
 
@@ -108,7 +102,7 @@ public class Player : MonoBehaviour {
             instance.PrintAvailableLocations();
             return;
         }
-        instance.outputController.SetOutput("Player currently in: " + instance.currentPlayerLocation.ToString());
+        instance.outputController.SetOutput("Player currently in: " + instance.dataManager.GetPlayerCurrentLocation().ToString());
     }
 
     /// <summary>
@@ -116,7 +110,7 @@ public class Player : MonoBehaviour {
     /// </summary>
     /// <param name="nounAndVar"></param>
     static public void Buy(string[] nounAndVar = null) {
-        if (instance.currentPlayerLocation != PlayerLocation.Store) {
+        if (instance.dataManager.currentPlayerLocation != PlayerLocation.Store) {
             instance.responseHandling.ThrowRestriction(PlayerRestrictions.PlayerNotAtCorrectLocation, PlayerLocation.Store.ToString());
             return;
         } else {
@@ -136,11 +130,11 @@ public class Player : MonoBehaviour {
             return;
         }
         // If player is not at work, throw restriction. Else, work with timer.
-        if (instance.currentPlayerLocation != PlayerLocation.Work) {
+        if (instance.dataManager.currentPlayerLocation != PlayerLocation.Work) {
             instance.responseHandling.ThrowRestriction(PlayerRestrictions.PlayerNotAtCorrectLocation, PlayerLocation.Work.ToString());
             return;
         } else {
-            instance.StartCoroutine(instance.WorkTime(5.0f));
+            instance.StartCoroutine(instance.WorkTime(0.0f));
         }
     }
 
@@ -228,13 +222,12 @@ public class Player : MonoBehaviour {
         string waitDots = "...";
         instance.outputController.SetInputActive(false);
         instance.outputController.SetOutput("travelling ", false);
-        foreach (char c in waitDots)
-        {
+        foreach (char c in waitDots) {
             instance.outputController.SetOutput(c.ToString() + " ", false);
             yield return new WaitForSeconds(seconds / waitDots.Length);
         }
         instance.outputController.SetOutput("\n", false);
-        instance.outputController.SetOutput("Player has arrived to: " + instance.currentPlayerLocation.ToString());
+        instance.outputController.SetOutput("Player has arrived to: " + instance.dataManager.currentPlayerLocation.ToString());
         instance.outputController.SetInputActive(true);
     }
 

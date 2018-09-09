@@ -127,7 +127,7 @@ public class InputController : MonoBehaviour {
     /// <param name="_noun"></param>
     /// <param name="_var"></param>
     private void CallCommand(string _action, string _object = null, string _noun = null, string _var = null) {
-        
+
         // ToDo
         //if (_action[0] == '@') {
         //    Debug.Log("HELOOO");
