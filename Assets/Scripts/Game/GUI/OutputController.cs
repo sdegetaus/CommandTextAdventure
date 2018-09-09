@@ -65,7 +65,16 @@ public class OutputController : MonoBehaviour {
         console_InputField.ActivateInputField();
     }
 
-    public void SetCaretToEnd() {
+    public void SetCaretToEnd(bool wait) {
+        if(wait) {
+            StartCoroutine(SetCaretToEnd_Delay(0.0f));
+        } else {
+            StartCoroutine(SetCaretToEnd_Delay(0.05f));
+        }  
+    }
+
+    private IEnumerator SetCaretToEnd_Delay(float seconds) {
+        yield return new WaitForSeconds(seconds);
         console_InputField.caretPosition = GetInputText().Length;
     }
 

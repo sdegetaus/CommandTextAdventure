@@ -64,7 +64,7 @@ public class Console : MonoBehaviour {
     /// Quits the Application
     /// </summary>
     /// <param name="nounAndVar"></param>
-    static public void Quit(string[] nounAndVar = null) {
+    static public void Exit(string[] nounAndVar = null) {
         Application.Quit();
     }
 
@@ -193,7 +193,7 @@ public class Console : MonoBehaviour {
             return;
         }
         string result = instance.LookAndApplyVariableValue(_noun).ToString();
-        instance.outputController.SetOutput(result);
+        instance.outputController.SetOutput(_noun + " = " + result);
     } 
     
     /// <summary>

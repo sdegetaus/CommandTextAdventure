@@ -38,20 +38,19 @@ public class InputController : MonoBehaviour {
             outputController.ClearInput();
             outputController.ActivateInputField();
             memoPointer = memoList.Count; // Restart Memo Navigation
-            outputController.CheckForOutputLimit();
+            outputController.CheckForOutputLimit(); // Check output size
         }
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             NavigateMemo(KeyCode.UpArrow);
             outputController.ActivateInputField();
-            outputController.SetCaretToEnd(); // WIP
         }
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
             NavigateMemo(KeyCode.DownArrow);
             outputController.ActivateInputField();
-            outputController.SetCaretToEnd(); // WIP
         }
         if (Input.GetMouseButtonDown(0)) {
             outputController.ActivateInputField();
+            outputController.SetCaretToEnd(false);
         }
     }
 
@@ -63,7 +62,6 @@ public class InputController : MonoBehaviour {
     /// <param name="_input"></param>
     private void InputParser(string _input) {
         if (_input == "" || _input == " ") {
-            outputController.SetOutput("", true);
             return;
         } else {
             // 1. Separating each word to an Array
@@ -129,6 +127,12 @@ public class InputController : MonoBehaviour {
     /// <param name="_noun"></param>
     /// <param name="_var"></param>
     private void CallCommand(string _action, string _object = null, string _noun = null, string _var = null) {
+        
+        // ToDo
+        //if (_action[0] == '@') {
+        //    Debug.Log("HELOOO");
+        //}
+
         // Setting first char of every string to upper (except _var)
         _action = GlobalInputParser.SetFirstCharToUpper(_action);
         _object = GlobalInputParser.SetFirstCharToUpper(_object);
@@ -151,6 +155,11 @@ public class InputController : MonoBehaviour {
         //OutputController.instance.Output();
         //ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);  
     }
+
+    // ToDo
+    //private void ObjectAnchor() {
+
+    //}
 
     #endregion
 
@@ -186,7 +195,7 @@ public class InputController : MonoBehaviour {
         if (memoPointer >= memoList.Count) { memoPointer = 0; }
         // Set input to the selected value
         outputController.SetInput(memoList[memoPointer]);
-        outputController.SetCaretToEnd();
+        outputController.SetCaretToEnd(true);
     }
 
     #endregion
