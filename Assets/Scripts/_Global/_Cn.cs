@@ -12,7 +12,8 @@ public enum PlayerLocation {
 
 public enum Objects {
     Console,
-    Player
+    Player,
+    Hidden
 }
 
 #region ResponseHandling

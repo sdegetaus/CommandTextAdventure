@@ -20,6 +20,12 @@ public class InputController : MonoBehaviour {
     private ResponseHandling responseHandling;
     private DataManager dataManager;
 
+    public Dictionary<Objects, string> ObjectDictionary = new Dictionary<Objects, string>() {
+        {Objects.Console, "Console" },
+        {Objects.Player, "Player" },
+        {Objects.Hidden, ".hidden" }
+    };
+
     private void Awake() {
         instance = this;
     }
@@ -140,6 +146,11 @@ public class InputController : MonoBehaviour {
         _object = GlobalInputParser.SetFirstCharToUpper(_object);
         _noun = GlobalInputParser.SetFirstCharToUpper(_noun);
 
+        // For later --> available cheats
+        if (_object == ".hidden" || _object == ".Hidden") {
+            _object = "Hidden";
+        }
+
         string[] NounAndVar = { _noun, _var };
 
         try {
@@ -152,8 +163,16 @@ public class InputController : MonoBehaviour {
             responseHandling.ThrowError(ErrorType.InvalidCommand);
             return;
         }
-
         dataManager.SetTotalCommandsEntered();
+    }
+
+    // ToDo
+    private bool CheckForSpecialInput(string input) {
+        if(ObjectDictionary.ContainsValue(input)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // ToDo

@@ -150,7 +150,7 @@ public class Player : MonoBehaviour {
                 instance.outputController.SetOutput(PlayerPrefs.GetString(_Cn.data_PlayerName, "Undefined"));
                 break;
             case "Location":
-                Location();
+                instance.outputController.SetOutput("Player currently at: " + instance.dataManager.GetPlayerCurrentLocation().ToString());
                 break;
             case "Help":
                 instance.outputController.SetOutput("Get information about the player: player get <noun>");
@@ -171,6 +171,11 @@ public class Player : MonoBehaviour {
 
         switch (_noun) {
             case "Name":
+                // Do not let name be nothing or null
+                if (_var == "" || _var == null) {
+                    instance.responseHandling.ThrowError(ErrorType.InvalidCommand);
+                    return;
+                }
                 PlayerPrefs.SetString(_Cn.data_PlayerName, _var);
                 instance.outputController.SetOutput("Player's Name Changed to: " + _var);
                 break;
@@ -179,7 +184,7 @@ public class Player : MonoBehaviour {
                 break;
             default:
                 instance.responseHandling.ThrowError(ErrorType.InvalidCommand);
-                break;
+                return;
         }
     }
 
