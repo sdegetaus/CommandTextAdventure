@@ -2,30 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConsoleResponseHandling : MonoBehaviour {
+public class ResponseHandling : MonoBehaviour {
 
-    public enum ErrorType {
-        ValueNotFormattedCorrectly,
-        InvalidCommand,
-        LocalVariableNotFound,
-        OnlyOneDigitVariablesAllowed,
-        VariablesCanOnlyBeLetters
-    }
+    static public ResponseHandling instance;
 
-    public enum ResponseType {
-        Done,
-        ThereAreNoVariablesSet
-    }
-
-    public enum PlayerRestrictions {
-        PlayerNotAtCorrectLocation,
-        PlayerAlreadyAtLocation
-    }
-
-    static public ConsoleResponseHandling instance;
+    private OutputController outputController;
 
     private void Awake() {
         instance = this;
+    }
+
+    private void Start() {
+        outputController = OutputController.instance;
     }
 
     public void ThrowError(ErrorType errorType, string blamedValue = null) {
@@ -50,7 +38,7 @@ public class ConsoleResponseHandling : MonoBehaviour {
                 errorMessage += "nothing";
                 break;
         }
-        CanvasLogicInGame.instance.SetOutput(errorMessage);
+        outputController.SetOutput(errorMessage);
     }
 
     public void ThrowResponse(ResponseType responseType, string blamedValue = null) {
@@ -63,7 +51,7 @@ public class ConsoleResponseHandling : MonoBehaviour {
                 responseMessage += "Currently there are no variables set";
                 break;
         }
-        CanvasLogicInGame.instance.SetOutput(responseMessage);
+        outputController.SetOutput(responseMessage);
     }
 
     public void ThrowRestriction(PlayerRestrictions playerRestrictions, string blamedValue = null) {
@@ -76,6 +64,6 @@ public class ConsoleResponseHandling : MonoBehaviour {
                 restrictionMessage += "The player is already at " + blamedValue;
                 break;
         }
-        CanvasLogicInGame.instance.SetOutput(restrictionMessage);
+        outputController.SetOutput(restrictionMessage);
     }
 }

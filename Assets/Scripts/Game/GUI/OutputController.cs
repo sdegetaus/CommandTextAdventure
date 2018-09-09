@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class CanvasLogicInGame : MonoBehaviour {
+/// <summary>
+/// OutputController interacts with the actual GUI of the Console.
+/// </summary>
+public class OutputController : MonoBehaviour {
 
-    static public CanvasLogicInGame instance;
+    static public OutputController instance;
 
     [SerializeField] private Image console_BG;
     [SerializeField] private TMP_InputField console_InputField;

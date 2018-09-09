@@ -24,7 +24,7 @@ public class GlobalInputParser {
             case 6: // Do nothing
                 break;
             default:
-                ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.ValueNotFormattedCorrectly);
+                ResponseHandling.instance.ThrowError(ErrorType.ValueNotFormattedCorrectly);
                 return new Color(0, 0, 0);
         }
         // Separate HexValue string into 2's (ff ff ff)
@@ -41,7 +41,7 @@ public class GlobalInputParser {
             // Returning values as individual floats to fit Color's attributes (255/255 = 1)
             return new Color(stringValuesToHex[0] / 255.0f, stringValuesToHex[1] / 255.0f, stringValuesToHex[2] / 255.0f);
         } catch {
-            ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.ValueNotFormattedCorrectly);
+            ResponseHandling.instance.ThrowError(ErrorType.ValueNotFormattedCorrectly);
             return new Color(0, 0, 0);
         }
     }
@@ -79,22 +79,4 @@ public class GlobalInputParser {
         return (double)(loDataTable.Rows[0]["Eval"]);
     }
 
-    // WIP - Doesn't work atm
-    static public bool IsArithmeticOperation(string[] s) {
-        int count = 0;
-        for (int i = 0; i < s.Length; i++) {
-            foreach (char c in s[i]) {
-                if ((c == '+' || c == '-' || c == '*' || c == '/' || c == '%') && !char.IsLetter(c) && c != '=') {
-                    count++;
-                    Debug.Log(count);
-                }
-            }
-        }
-        Debug.Log(count + "?=" + s.Length);
-        if (count == s.Length) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

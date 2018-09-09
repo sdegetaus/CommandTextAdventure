@@ -9,8 +9,6 @@ public class DataManager : MonoBehaviour {
 
     static public DataManager instance;
 
-    private int totalCoins;
-
     private int stats_totalCoins { get { return PlayerPrefs.GetInt(_Cn.data_TotalCoins); } set { PlayerPrefs.SetInt(_Cn.data_TotalCoins, value); } }
     private int data_PlayerLocation { get { return PlayerPrefs.GetInt(_Cn.data_PlayerLocation); } set { PlayerPrefs.SetInt(_Cn.data_TotalCoins, value);  } }
 
@@ -18,15 +16,10 @@ public class DataManager : MonoBehaviour {
         instance = this;
     }
 
-    private void Start() {
-        totalCoins = PlayerPrefs.GetInt(_Cn.data_TotalCoins, 0);
-    }
-
     #region Currency Methods
 
     public void SetCoins(int amount) {
         stats_totalCoins += amount;
-        //PlayerPrefs.SetInt(_Cn.data_TotalCoins, totalCoins);
     }
 
     public int GetCoins() {

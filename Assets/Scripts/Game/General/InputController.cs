@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using TMPro;
 
 /// <summary>
 /// InputController controls the keys pressed during runtime and reads the text value from the console GUI; It also keeps the input memoization.
@@ -14,50 +13,56 @@ public class InputController : MonoBehaviour {
     static public InputController instance;
 
     [SerializeField] private List<string> memoList;
-
     private readonly int memoLimit = 5;
     private int memoPointer;
 
-    //[HideInInspector]
-    public bool isCoroutineFinished; // Used to call output after coroutine is finished (used in special places)
-    
+    private OutputController outputController;
+    private ResponseHandling responseHandling;
+
     private void Awake() {
         instance = this;
     }
 
     private void Start() {
-        CanvasLogicInGame.instance.ClearInput();
-        CanvasLogicInGame.instance.ActivateInputField();
+        outputController = OutputController.instance;
+        responseHandling = ResponseHandling.instance;
+
+        outputController.ClearInput();
+        outputController.ActivateInputField();
         memoPointer = memoList.Count;
-        isCoroutineFinished = true;
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Return)) {
-            InputParser(CanvasLogicInGame.instance.GetInputText());
-            CanvasLogicInGame.instance.ClearInput();
-            CanvasLogicInGame.instance.ActivateInputField();
+            InputParser(outputController.GetInputText());
+            outputController.ClearInput();
+            outputController.ActivateInputField();
             memoPointer = memoList.Count; // Restart Memo Navigation
         }
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             NavigateMemo(KeyCode.UpArrow);
-            CanvasLogicInGame.instance.SetCaretToEnd();
-            CanvasLogicInGame.instance.ActivateInputField();
+            outputController.ActivateInputField();
+            outputController.SetCaretToEnd(); // WIP
         }
         if (Input.GetKeyDown(KeyCode.DownArrow)) {
             NavigateMemo(KeyCode.DownArrow);
-            CanvasLogicInGame.instance.SetCaretToEnd();
-            CanvasLogicInGame.instance.ActivateInputField();
+            outputController.ActivateInputField();
+            outputController.SetCaretToEnd(); // WIP
         }
         if (Input.GetMouseButtonDown(0)) {
-            CanvasLogicInGame.instance.ActivateInputField();
+            outputController.ActivateInputField();
         }
     }
 
     #region Input Readers
+    /// <summary>
+    /// Deletes all the spaces that the player input, saves to memo. Basically, cleans the input for accurate reading and calling.
+    /// </summary>
+    /// <param name="_input"></param>
     private void InputParser(string _input) {
         if (_input == "" || _input == " ") {
-            Debug.Log("Nothing");
+            outputController.SetOutput("", true);
+            return;
         } else {
             // 1. Separating each word to an Array
             string[] inputArray = _input.Split(' ');
@@ -78,37 +83,38 @@ public class InputController : MonoBehaviour {
             // Removing Data if Memo has reached its limit
             if (memoList.Count >= memoLimit) { memoList.RemoveAt(0); }
             // Saving Data to Memoization
-            memoList.Add(string.Join(" ", inputWithoutSpaces)); // Add it as an Object, not string?
+            memoList.Add(string.Join(" ", inputWithoutSpaces));
         }
     }
 
+    /// <summary>
+    /// Establishes the kind of command that is being parsed, i.e. one word = action; two: object and action.
+    /// </summary>
+    /// <param name="_inputSplit"></param>
     private void InputLengthChecker(string[] _inputSplit) {
         int _inputSplitLength = _inputSplit.Length;
-        CanvasLogicInGame.instance.SetOutput(string.Join(" ", _inputSplit));
+        outputController.SetOutput(string.Join(" ", _inputSplit));
         switch (_inputSplitLength)
         {
             case 1:
                 // Action
-                Debug.Log("Action");
                 CallCommand(_action: _inputSplit[0]);
                 break;
             case 2:
                 // Object, Action
-                Debug.Log("Object, Action");
                 CallCommand(_action: _inputSplit[1], _object: _inputSplit[0]);
                 break;
             case 3:
                 // Object, Action, Noun
-                Debug.Log("Object, Action, Noun");
                 CallCommand(_action: _inputSplit[1], _object: _inputSplit[0], _noun: _inputSplit[2]);
                 break;
             case 4:
                 // Object, Action, Noun, Var
-                Debug.Log("Object, Action, Noun, Var");
                 CallCommand(_action: _inputSplit[1], _object: _inputSplit[0], _noun: _inputSplit[2], _var: _inputSplit[3]);
                 break;
             default:
-                ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
+                // More: throw error
+                responseHandling.ThrowError(ErrorType.InvalidCommand);
                 break;
         }
     }
@@ -135,7 +141,7 @@ public class InputController : MonoBehaviour {
                 InvokeStringMethod(_action, _object, NounAndVar);
             }
         } catch {
-            ConsoleResponseHandling.instance.ThrowError(ConsoleResponseHandling.ErrorType.InvalidCommand);
+            responseHandling.ThrowError(ErrorType.InvalidCommand);
             return;
         }
 
@@ -151,7 +157,7 @@ public class InputController : MonoBehaviour {
     /// </summary>
     /// <param name="methodName">Method to Call</param>
     /// <param name="className">Method's Class Name</param>
-    /// <param name="stringParams">Method's parameters</param>
+    /// <param name="stringParams">Method's Parameters</param>
     /// <returns>Null</returns>
     public string InvokeStringMethod(string methodName, string className = null, string[] stringParams = null) {
         Type calledType = Type.GetType(className);
@@ -162,10 +168,14 @@ public class InputController : MonoBehaviour {
 
     #region Input Memoization
 
+    /// <summary>
+    /// Iterates through the previous entered commands, max value of memoization can be set at class' variables.
+    /// </summary>
+    /// <param name="keyCode">Up or Down Arrow</param>
     private void NavigateMemo(KeyCode keyCode) {
         // If the list count is 0, we assume it is empty
         if(memoList.Count == 0) { return; }
-        CanvasLogicInGame.instance.ClearInput();
+        outputController.ClearInput();
         // Up: pointer - 1 | Down: pointer + 1
         if (keyCode == KeyCode.UpArrow) { memoPointer--; } else { memoPointer++; }
         // If pointer is less than zero, start at end
@@ -173,9 +183,8 @@ public class InputController : MonoBehaviour {
         // If pointer is more than length, start at the beginning
         if (memoPointer >= memoList.Count) { memoPointer = 0; }
         // Set input to the selected value
-        CanvasLogicInGame.instance.SetInput(memoList[memoPointer]);
-        CanvasLogicInGame.instance.SetCaretToEnd();
-
+        outputController.SetInput(memoList[memoPointer]);
+        outputController.SetCaretToEnd();
     }
 
     #endregion
