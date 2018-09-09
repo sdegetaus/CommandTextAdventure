@@ -207,6 +207,7 @@ public class Console : MonoBehaviour {
     #endregion
 
     #region Console Helper Functions
+
     /// <summary>
     /// Iterates through every char of _noun (expression). If a letter is found, it searches if it is a local variable, throws error if not. Finally, it does the calculation.
     /// </summary>
