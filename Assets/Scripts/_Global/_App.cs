@@ -1,32 +1,22 @@
 ﻿using UnityEngine;
 
-public class _App : MonoBehaviour
-{
-    public static _App instance;
-
-    //public delegate void GenericHandler();
-    //public event GenericHandler OnMainMenuLoaded;
+public class _App : MonoBehaviour {
+    static public _App instance;
 
     void Awake() {
         instance = this;
 
-        // TO DO
-        //QualitySettings.vSyncCount = 0;  // VSync must be disabled
-        //Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
         //Application.runInBackground = _Cn.debugOn ? true : false;
         //Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
-    private void LoadPreferences() {
-        // ToDo
-    }
-
-    void OnApplicationPause(bool pauseStatus) {
+    private void OnApplicationPause() {
         Debug.Log("OnApplicationPause");
     }
 
-    void OnApplicationQuit() {
-        Debug.Log("OnApplicationQuit");
+    private void OnApplicationQuit() {
         PlayerPrefs.Save();
     }
 }
