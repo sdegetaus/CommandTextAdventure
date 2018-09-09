@@ -38,6 +38,7 @@ public class InputController : MonoBehaviour {
             outputController.ClearInput();
             outputController.ActivateInputField();
             memoPointer = memoList.Count; // Restart Memo Navigation
+            outputController.CheckForOutputLimit();
         }
         if (Input.GetKeyDown(KeyCode.UpArrow)) {
             NavigateMemo(KeyCode.UpArrow);
@@ -55,6 +56,7 @@ public class InputController : MonoBehaviour {
     }
 
     #region Input Readers
+
     /// <summary>
     /// Deletes all the spaces that the player input, saves to memo. Basically, cleans the input for accurate reading and calling.
     /// </summary>

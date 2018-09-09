@@ -194,12 +194,13 @@ public class Player : MonoBehaviour {
                 break;
         }
     }
+
     #endregion
 
     #region Player Helper Functions
 
     /// <summary>
-    /// Punishment for working.
+    /// "Punishment" for working time.
     /// </summary>
     /// <param name="seconds">Seconds to wait.</param>
     /// <returns>WaitForSeconds</returns>
@@ -218,6 +219,11 @@ public class Player : MonoBehaviour {
         instance.outputController.SetInputActive(true);
     }
 
+    /// <summary>
+    /// "Punishment" for getting from one place to another
+    /// </summary>
+    /// <param name="seconds"></param>
+    /// <returns></returns>
     private IEnumerator GotoTime(float seconds) {
         string waitDots = "...";
         instance.outputController.SetInputActive(false);
@@ -232,12 +238,15 @@ public class Player : MonoBehaviour {
         instance.outputController.SetInputActive(true);
     }
 
+    /// <summary>
+    /// Common Available Locations Printer
+    /// </summary>
     private void PrintAvailableLocations() {
         instance.outputController.SetOutput("Available locations: \n", false);
         foreach (PlayerLocation location in Enum.GetValues(typeof(PlayerLocation))) {
             instance.outputController.SetOutput("- " + location.ToString() + "\n", false);
         }
     }
-    #endregion
 
+    #endregion
 }

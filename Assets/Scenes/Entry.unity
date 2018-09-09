@@ -393,6 +393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 228b484c28516334a84f7556543add9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  memoList: []
 --- !u!114 &382219687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1218,7 +1219,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1259,6 +1260,7 @@ MonoBehaviour:
   console_InputTextPlaceholder: {fileID: 460060059}
   console_OutputText: {fileID: 287155579}
   console_BracketText: {fileID: 2098273253}
+  outputRect: {fileID: 287155578}
 --- !u!1 &2098273251
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,8 +1343,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

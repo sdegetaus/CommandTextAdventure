@@ -18,6 +18,8 @@ public class OutputController : MonoBehaviour {
     [SerializeField] private TMP_Text console_OutputText;
     [SerializeField] private TMP_Text console_BracketText;
 
+    [SerializeField] private RectTransform outputRect;
+
     private void Awake() {
         instance = this;
     }
@@ -31,6 +33,21 @@ public class OutputController : MonoBehaviour {
         SetOutput("-> player help \n", false);
         SetOutput("\n", false);
         // [...]
+    }
+
+    // Check and optimize
+    public void CheckForOutputLimit() {
+        if(outputRect.rect.height > 980.0f) {
+            outputRect.pivot = new Vector2(0.5f, 0f);
+            outputRect.anchorMin = new Vector2(0, 0);
+            outputRect.anchorMax = new Vector2(1, 0);
+            outputRect.anchoredPosition = new Vector2(0, 46.38f);
+        } else {
+            outputRect.pivot = new Vector2(0.5f, 1f);
+            outputRect.anchorMin = new Vector2(0, 1);
+            outputRect.anchorMax = new Vector2(1, 01);
+            outputRect.anchoredPosition = new Vector2(0, 0);
+        }
     }
 
     public void SetInputActive(bool active) {
@@ -69,7 +86,10 @@ public class OutputController : MonoBehaviour {
     }
 
     public void ClearOutput() {
-        console_OutputText.text = "";
+        console_OutputText.text = "Console Cleared \n";
+        // Make the if statement pass at once the output is cleared
+        outputRect.sizeDelta = new Vector2(0, 0); 
+        CheckForOutputLimit();
     }
 
     public void SetUIColors(Color color, bool background) {
