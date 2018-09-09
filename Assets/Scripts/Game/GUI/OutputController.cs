@@ -50,6 +50,10 @@ public class OutputController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Limit player to input commands when there is a coroutine running
+    /// </summary>
+    /// <param name="active"></param>
     public void SetInputActive(bool active) {
         console_InputField.interactable = active;
         if (active) {
@@ -57,14 +61,25 @@ public class OutputController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Get the current text of the input
+    /// </summary>
+    /// <returns>String InputText</returns>
     public string GetInputText() {
         return console_InputField.text;
     }
 
+    /// <summary>
+    /// Activate the Input field for typing
+    /// </summary>
     public void ActivateInputField() {
         console_InputField.ActivateInputField();
     }
 
+    /// <summary>
+    /// Accessor for the coroutine SetCaretToEnd_Delay; for some reason after key press the caretPosition var doesn't work properly so I added a little delay.
+    /// </summary>
+    /// <param name="wait"></param>
     public void SetCaretToEnd(bool wait) {
         if(wait) {
             StartCoroutine(SetCaretToEnd_Delay(0.0f));
@@ -73,15 +88,29 @@ public class OutputController : MonoBehaviour {
         }  
     }
 
+    /// <summary>
+    /// (See the method above) Delay for setting the caret.
+    /// </summary>
+    /// <param name="seconds"></param>
+    /// <returns>WaitForSeconds</returns>
     private IEnumerator SetCaretToEnd_Delay(float seconds) {
         yield return new WaitForSeconds(seconds);
         console_InputField.caretPosition = GetInputText().Length;
     }
 
+    /// <summary>
+    /// Set input's text.
+    /// </summary>
+    /// <param name="value"></param>
     public void SetInput(string value) {
         console_InputField.text = value;
     }
 
+    /// <summary>
+    /// Set output's text.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="addLineCharacters"></param>
     public void SetOutput(string value, bool addLineCharacters = true) {
         if (addLineCharacters) {
             console_OutputText.text += "> " + value + "\n";
@@ -90,10 +119,16 @@ public class OutputController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Clear the Input value.
+    /// </summary>
     public void ClearInput() {
         console_InputField.text = "";
     }
 
+    /// <summary>
+    /// Clear output.
+    /// </summary>
     public void ClearOutput() {
         console_OutputText.text = "Console Cleared \n";
         // Make the if statement pass at once the output is cleared
@@ -101,6 +136,11 @@ public class OutputController : MonoBehaviour {
         CheckForOutputLimit();
     }
 
+    /// <summary>
+    /// Set UI color to parsed hexadecimal value as color.
+    /// </summary>
+    /// <param name="color"></param>
+    /// <param name="background"></param>
     public void SetUIColors(Color color, bool background) {
         if (background) {
             console_BG.color = color;
@@ -112,6 +152,9 @@ public class OutputController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// A little trick here: getting current bg and text colors and inverting them.
+    /// </summary>
     public void InvertUIColors() {
         console_BG.color = new Color(Mathf.Abs(console_BG.color.r - 1), Mathf.Abs(console_BG.color.g - 1), Mathf.Abs(console_BG.color.b - 1));
         Color textInverted = new Color(Mathf.Abs(console_InputText.color.r - 1), Mathf.Abs(console_InputText.color.g - 1), Mathf.Abs(console_InputText.color.b - 1));
