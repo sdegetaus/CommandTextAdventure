@@ -21,11 +21,6 @@ public class Player : MonoBehaviour {
         dataManager = DataManager.instance;
     }
 
-    //Debug
-    private void Update() {
-        Debug.Log(dataManager.GetPlayerCurrentLocation().ToString());
-    }
-
     #region Player Actions
 
     /// <summary>
@@ -52,7 +47,9 @@ public class Player : MonoBehaviour {
         //ToDo
         instance.outputController.SetOutput("Here your stats will be displayed :) \n" +
                                              "IDEAS: \n" +
-                                             "Commands Made, ");
+                                             "Total Valid Commands Entered: " + instance.dataManager.GetTotalCommandsEntered() + "\n" +
+                                             "Current Coins: " + instance.dataManager.GetCurrentCoins() + "\n" +
+                                             "Total Coins: " + instance.dataManager.GetTotalCoins());
     }
 
     /// <summary>
@@ -64,15 +61,12 @@ public class Player : MonoBehaviour {
         string _var = nounAndVar[1]; // ... todo, perhas adverbs of time (how quickly the player can get there).
         switch(_noun) {
             case "Home":
-                //instance.dataManager.previousPlayerLocation = instance.dataManager.currentPlayerLocation;
                 instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.Home);
                 break;
             case "Work":
-                //instance.dataManager.previousPlayerLocation = instance.dataManager.currentPlayerLocation;
                 instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.Work);
                 break;
             case "Store":
-                //instance.dataManager.previousPlayerLocation = instance.dataManager.currentPlayerLocation;
                 instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.Store);
                 break;
             case "Help":
@@ -102,7 +96,7 @@ public class Player : MonoBehaviour {
             instance.PrintAvailableLocations();
             return;
         }
-        instance.outputController.SetOutput("Player currently in: " + instance.dataManager.GetPlayerCurrentLocation().ToString());
+        instance.outputController.SetOutput("Player currently at: " + instance.dataManager.GetPlayerCurrentLocation().ToString());
     }
 
     /// <summary>
@@ -150,7 +144,7 @@ public class Player : MonoBehaviour {
             case "Money":
             case "Gold":
             case "Coins":
-                instance.outputController.SetOutput("Total Coins: " + instance.dataManager.GetCoins().ToString());
+                instance.outputController.SetOutput("Total Coins: " + instance.dataManager.GetCurrentCoins().ToString());
                 break;
             case "Name":
                 instance.outputController.SetOutput(PlayerPrefs.GetString(_Cn.data_PlayerName, "Undefined"));
@@ -189,6 +183,14 @@ public class Player : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Prints the availabl money.
+    /// </summary>
+    /// <param name="nounAndVar"></param>
+    static public void Money(string[] nounAndVar = null) {
+        instance.outputController.SetOutput("Total Current Coins: " + instance.dataManager.GetCurrentCoins().ToString());
+    }
+
     #endregion
 
     #region Player Helper Functions
@@ -207,8 +209,9 @@ public class Player : MonoBehaviour {
             yield return new WaitForSeconds(seconds / waitDots.Length);
         }
         instance.outputController.SetOutput("\n", false);
-        int valueGained = 5; // Set dynamically
-        instance.dataManager.SetCoins(valueGained);
+        int valueGained = 5; // To be Set dynamically
+        instance.dataManager.SetCurrentCoins(valueGained); // <-- Available to spend
+        instance.dataManager.SetTotalCoins(valueGained); // <-- Total Gained throughout the game
         instance.outputController.SetOutput("Coins gained: " + valueGained);
         instance.outputController.SetInputActive(true);
     }
@@ -239,6 +242,16 @@ public class Player : MonoBehaviour {
         foreach (PlayerLocation location in Enum.GetValues(typeof(PlayerLocation))) {
             instance.outputController.SetOutput("- " + location.ToString() + "\n", false);
         }
+    }
+    
+    /// <summary>
+    /// Common Available Locations Printer
+    /// </summary>
+    private void PrintAvailablePurchaseables() {
+        instance.outputController.SetOutput("Available items for buying: \n", false);
+        //foreach (PlayerLocation location in Enum.GetValues(typeof(PlayerLocation))) {
+        //    instance.outputController.SetOutput("- " + location.ToString() + "\n", false);
+        //}
     }
 
     #endregion

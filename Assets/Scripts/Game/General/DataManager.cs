@@ -9,11 +9,20 @@ public class DataManager : MonoBehaviour {
 
     static public DataManager instance;
 
+    // Location States
     public PlayerLocation currentPlayerLocation;
     public PlayerLocation previousPlayerLocation;
 
-    private int stats_totalCoins { get { return PlayerPrefs.GetInt(_Cn.data_TotalCoins); } set { PlayerPrefs.SetInt(_Cn.data_TotalCoins, value); } }
-    private int data_PlayerLocation { get { return PlayerPrefs.GetInt(_Cn.data_PlayerLocation); } set { PlayerPrefs.SetInt(_Cn.data_TotalCoins, value);  } }
+    #region PlayerPrefs
+
+    private int data_PlayerLocation { get { return PlayerPrefs.GetInt(_Cn.data_PlayerLocation); } set { PlayerPrefs.SetInt(_Cn.data_PlayerLocation, value);  } }
+
+    // Statistics
+    private int stats_CurrentCoins { get { return PlayerPrefs.GetInt(_Cn.stats_CurrentCoins); } set { PlayerPrefs.SetInt(_Cn.stats_CurrentCoins, value); } }
+    private int stats_TotalCoins { get { return PlayerPrefs.GetInt(_Cn.stats_TotalCoins); } set { PlayerPrefs.SetInt(_Cn.stats_TotalCoins, value); } }
+    private int stats_TotalCommandsEntered { get { return PlayerPrefs.GetInt(_Cn.stats_TotalCommandsEntered); } set { PlayerPrefs.SetInt(_Cn.stats_TotalCommandsEntered, value); } }
+
+    #endregion
 
     private void Awake() {
         instance = this;
@@ -25,12 +34,20 @@ public class DataManager : MonoBehaviour {
 
     #region Currency Methods
 
-    public void SetCoins(int amount) {
-        stats_totalCoins += amount;
+    public void SetCurrentCoins(int amount) {
+        stats_CurrentCoins += amount;
     }
 
-    public int GetCoins() {
-        return PlayerPrefs.GetInt(_Cn.data_TotalCoins);
+    public int GetCurrentCoins() {
+        return PlayerPrefs.GetInt(_Cn.stats_CurrentCoins);
+    }
+
+    // Total Coins Gained for Statistics
+    public void SetTotalCoins(int amount) {
+        stats_TotalCoins += amount;
+    }
+    public int GetTotalCoins() {
+        return PlayerPrefs.GetInt(_Cn.stats_TotalCoins);
     }
 
     #endregion
@@ -45,9 +62,18 @@ public class DataManager : MonoBehaviour {
         previousPlayerLocation = currentPlayerLocation;
         currentPlayerLocation = playerLocation;
         data_PlayerLocation = (int)(PlayerLocation)currentPlayerLocation;
-        PlayerPrefs.SetInt(_Cn.data_PlayerLocation, (int)(PlayerLocation)currentPlayerLocation);
     }
 
     #endregion
 
+    #region Store Methods
+
+    #endregion
+
+    #region General Statistics
+
+    public int GetTotalCommandsEntered() { return stats_TotalCommandsEntered; }
+    public void SetTotalCommandsEntered() { stats_TotalCommandsEntered++; }
+
+    #endregion
 }

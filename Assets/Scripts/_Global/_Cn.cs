@@ -42,7 +42,12 @@ public class _Cn  {
     #region Player Preferences
     public const string data_PlayerName = "data_PlayerName";
     public const string data_PlayerLocation = "data_PlayerLocation";
-    public const string data_TotalCoins = "data_TotalCoins";
+
+    // Statistics
+    public const string stats_CurrentCoins = "data_CurrentCoins";
+    public const string stats_TotalCoins = "stats_TotalCoins";
+    public const string stats_TotalCommandsEntered = "stats_TotalCommandsEntered";
+
     #endregion
 
 }

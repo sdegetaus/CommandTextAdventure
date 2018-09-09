@@ -18,6 +18,7 @@ public class InputController : MonoBehaviour {
 
     private OutputController outputController;
     private ResponseHandling responseHandling;
+    private DataManager dataManager;
 
     private void Awake() {
         instance = this;
@@ -26,6 +27,7 @@ public class InputController : MonoBehaviour {
     private void Start() {
         outputController = OutputController.instance;
         responseHandling = ResponseHandling.instance;
+        dataManager = DataManager.instance;
 
         outputController.ClearInput();
         outputController.ActivateInputField();
@@ -151,9 +153,7 @@ public class InputController : MonoBehaviour {
             return;
         }
 
-        // ToDo
-        //OutputController.instance.Output();
-        //ConsoleResponseHandling.instance.ThrowResponse(ConsoleResponseHandling.ResponseType.Done);  
+        dataManager.SetTotalCommandsEntered();
     }
 
     // ToDo
