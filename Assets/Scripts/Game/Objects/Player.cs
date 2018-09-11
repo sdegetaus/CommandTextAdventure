@@ -60,6 +60,10 @@ public class Player : MonoBehaviour {
         string _noun = nounAndVar[0]; // Place
         string _var = nounAndVar[1]; // ... todo, perhas adverbs of time (how quickly the player can get there).
         switch(_noun) {
+            case "Help":
+                instance.outputController.SetOutput("You can go to other places in the world: player goto <location>");
+                instance.PrintAvailableLocations();
+                return;
             case "Home":
                 instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.Home);
                 break;
@@ -69,10 +73,9 @@ public class Player : MonoBehaviour {
             case "Store":
                 instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.Store);
                 break;
-            case "Help":
-                instance.outputController.SetOutput("You can go to other places in the world: player goto <location>");
-                instance.PrintAvailableLocations();
-                return;
+            case "School":
+                instance.dataManager.SetPlayerCurrentLocation(PlayerLocation.School);
+                break;
             default:
                 instance.responseHandling.ThrowError(ErrorType.InvalidCommand);
                 return;
@@ -82,7 +85,7 @@ public class Player : MonoBehaviour {
             instance.responseHandling.ThrowRestriction(PlayerRestrictions.PlayerAlreadyAtLocation, _noun);
             return;
         } else {
-            instance.StartCoroutine(instance.GotoTime(0.0f));
+            instance.StartCoroutine(instance.GotoTime(2.0f));
         }
     }
 
@@ -112,7 +115,7 @@ public class Player : MonoBehaviour {
         }
         // ToDo
     }
-
+    
     /// <summary>
     /// Win money this way: data like money is managed at DataManager for data persistence.
     /// </summary>
@@ -128,7 +131,26 @@ public class Player : MonoBehaviour {
             instance.responseHandling.ThrowRestriction(PlayerRestrictions.PlayerNotAtCorrectLocation, PlayerLocation.Work.ToString());
             return;
         } else {
-            instance.StartCoroutine(instance.WorkTime(0.0f));
+            instance.StartCoroutine(instance.WorkTime(2.0f));
+        }
+    }
+
+    /// <summary>
+    /// Buy method for Player.
+    /// </summary>
+    /// <param name="nounAndVar"></param>
+    static public void Study(string[] nounAndVar = null) {
+        // If noun is Help, show info
+        //if (nounAndVar[0] == "Help") {
+        //    instance.outputController.SetOutput("Player must be at Work in order to win money. Type: player goto <location>");
+        //    return;
+        //}
+        // If player is not at school, throw restriction. Else, work with timer.
+        if (instance.dataManager.currentPlayerLocation != PlayerLocation.School) {
+            instance.responseHandling.ThrowRestriction(PlayerRestrictions.PlayerNotAtCorrectLocation, PlayerLocation.School.ToString());
+            return;
+        } else {
+            instance.StartCoroutine(instance.StudyTime(2.0f));
         }
     }
 
@@ -238,6 +260,25 @@ public class Player : MonoBehaviour {
         instance.outputController.SetOutput("Player has arrived to: " + instance.dataManager.currentPlayerLocation.ToString());
         instance.outputController.SetInputActive(true);
     }
+
+    /// <summary>
+    /// "Punishment" for studying
+    /// </summary>
+    /// <param name="seconds"></param>
+    /// <returns></returns>
+    private IEnumerator StudyTime(float seconds) {
+        string waitDots = "...";
+        instance.outputController.SetInputActive(false);
+        instance.outputController.SetOutput("studying ", false);
+        foreach (char c in waitDots) {
+            instance.outputController.SetOutput(c.ToString() + " ", false);
+            yield return new WaitForSeconds(seconds / waitDots.Length);
+        }
+        instance.outputController.SetOutput("\n", false);
+        instance.outputController.SetOutput("Player studied.");//+ instance.dataManager.currentPlayerLocation.ToString());
+        instance.outputController.SetInputActive(true);
+    }
+
 
     /// <summary>
     /// Common Available Locations Printer

@@ -7,7 +7,8 @@ using UnityEngine;
 public enum PlayerLocation {
     Home,
     Work,
-    Store
+    Store,
+    School
 }
 
 public enum Objects {

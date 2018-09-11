@@ -157,13 +157,15 @@ public class InputController : MonoBehaviour {
         //}
 
         //// For later --> available cheats
-        if (_object == "Hidden" || _object == "hidden") {
+        if ((_object == "Hidden" || _object == "hidden")) {
             responseHandling.ThrowError(ErrorType.InvalidCommand);
             return;
         }
         if ((_object == ".hidden" || _object == ".Hidden")) {
             _object = "Hidden";
         }
+
+        Debug.Log("Object: " + _object + " | Action: " + _action + " | Noun: " + _noun + " | Var: " + _var);
 
         string[] NounAndVar = { _noun, _var };
 

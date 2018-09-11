@@ -68,9 +68,17 @@ public class Console : MonoBehaviour {
         Application.Quit();
     }
 
-    //static public void Print(string[] nounAndVar) {
-    //    CanvasLogicInGame.instance.SetOutput(string.Join("", nounAndVar));
-    //}
+    // WIP
+    static public void Print(string[] nounAndVar) {
+
+        if (nounAndVar[1] != null) {
+            instance.outputController.SetOutput("Only one word or local variables are available for printing.");
+            instance.responseHandling.ThrowError(ErrorType.InvalidCommand);
+            return;
+        }
+
+        instance.outputController.SetOutput(nounAndVar[0]);
+    }
 
     /// <summary>
     /// Changes background or text color of console.
@@ -81,14 +89,14 @@ public class Console : MonoBehaviour {
         string _var = nounAndVar[1]; // Hexadecimal Value
 
         switch(_noun) {
+            case "Help":
+                instance.outputController.SetOutput("You can change the console bg and text colors:\n console change bg / text <hex-value>  OR  console change invert / swap  OR  console invert / swap \n");
+                return;
             case "Bg":
                 instance.outputController.SetUIColors(GlobalInputParser.StringToColor(_var), true);
                 return;
             case "Text":
                 instance.outputController.SetUIColors(GlobalInputParser.StringToColor(_var), false);
-                return;
-            case "Help":
-                instance.outputController.SetOutput("You can change the console bg and text colors:\n console change bg / text <hex-value>  OR  console change invert  OR  console invert \n");
                 return;
             case "Invert":
                 Invert();
