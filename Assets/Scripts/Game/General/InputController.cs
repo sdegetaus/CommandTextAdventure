@@ -20,6 +20,8 @@ public class InputController : MonoBehaviour {
     private ResponseHandling responseHandling;
     private DataManager dataManager;
 
+    bool PRUEBA = false;
+
     public Dictionary<Objects, string> ObjectDictionary = new Dictionary<Objects, string>() {
         {Objects.Console, "Console" },
         {Objects.Player, "Player" },
@@ -35,7 +37,10 @@ public class InputController : MonoBehaviour {
         responseHandling = ResponseHandling.instance;
         dataManager = DataManager.instance;
 
-        outputController.ClearInput();
+        if (!PRUEBA) {
+            outputController.ClearInput();
+        }
+
         outputController.ActivateInputField();
         memoPointer = memoList.Count;
     }
@@ -146,8 +151,17 @@ public class InputController : MonoBehaviour {
         _object = GlobalInputParser.SetFirstCharToUpper(_object);
         _noun = GlobalInputParser.SetFirstCharToUpper(_noun);
 
-        // For later --> available cheats
-        if (_object == ".hidden" || _object == ".Hidden") {
+        //if(_action == "@console") {
+        //    PRUEBA = false;
+        //    outputController.SetInput("@console");
+        //}
+
+        //// For later --> available cheats
+        if (_object == "Hidden" || _object == "hidden") {
+            responseHandling.ThrowError(ErrorType.InvalidCommand);
+            return;
+        }
+        if ((_object == ".hidden" || _object == ".Hidden")) {
             _object = "Hidden";
         }
 

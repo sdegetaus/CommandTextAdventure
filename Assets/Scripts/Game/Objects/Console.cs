@@ -83,16 +83,19 @@ public class Console : MonoBehaviour {
         switch(_noun) {
             case "Bg":
                 instance.outputController.SetUIColors(GlobalInputParser.StringToColor(_var), true);
-                break;
+                return;
             case "Text":
                 instance.outputController.SetUIColors(GlobalInputParser.StringToColor(_var), false);
-                break;
+                return;
             case "Help":
                 instance.outputController.SetOutput("You can change the console bg and text colors:\n console change bg / text <hex-value>  OR  console change invert  OR  console invert \n");
-                break;
+                return;
             case "Invert":
                 Invert();
-                break;
+                return;
+            case "Swap":
+                Swap();
+                return;
             default:
                 instance.responseHandling.ThrowError(ErrorType.InvalidCommand);
                 return;
@@ -105,6 +108,14 @@ public class Console : MonoBehaviour {
     /// <param name="nounAndVar"></param>
     static public void Invert(string[] nounAndVar = null) {
         instance.outputController.InvertUIColors();
+    }
+
+    /// <summary>
+    /// Swaps the colors of background and text.
+    /// </summary>
+    /// <param name="nounAndVar"></param>
+    static public void Swap (string[] nounAndVar = null) {
+        instance.outputController.SwapUIColors();
     }
 
     /// <summary>

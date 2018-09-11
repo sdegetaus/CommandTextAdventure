@@ -151,7 +151,7 @@ public class OutputController : MonoBehaviour {
     }
 
     /// <summary>
-    /// A little trick here: getting current bg and text colors and inverting them.
+    /// Getting current bg and text colors and inverting them.
     /// </summary>
     public void InvertUIColors() {
         console_BG.color = new Color(Mathf.Abs(console_BG.color.r - 1), Mathf.Abs(console_BG.color.g - 1), Mathf.Abs(console_BG.color.b - 1));
@@ -161,4 +161,14 @@ public class OutputController : MonoBehaviour {
         console_BracketText.color = textInverted;
     }
 
+    /// <summary>
+    /// Swapping the colors from bg to text and vicerversa
+    /// </summary>
+    public void SwapUIColors() {
+        Color tempColor = console_BG.color; // Saving original console bg color
+        console_BG.color = console_InputText.color;
+        console_InputText.color = tempColor;
+        console_OutputText.color = tempColor;
+        console_BracketText.color = tempColor;
+    }
 }
